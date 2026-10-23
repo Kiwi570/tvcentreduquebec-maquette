@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tv-Centre du Québec</title>
+<meta name="description" content="Tv-Centre du Québec : appareils 4K, configuration à distance et solutions légales pour alléger votre facture de télévision au Centre-du-Québec.">
+<meta name="theme-color" content="#1c1d22">
+<link rel="icon" href="img/logo-icone.webp" type="image/webp">
+<link rel="preload" href="fonts/geist.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="fonts/geist-mono.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-intro>
+<a class="skip" href="#economies">Aller au contenu</a>
+
+<header class="site-header">
+  <a class="brand" href="index.html" aria-label="Tv-Centre du Québec, accueil">
+    <span class="brand-chip"><img src="img/logo-icone.webp" alt="" width="30" height="35"></span>
+    <span class="brand-text"><span class="brand-name">Tv-Centre du Québec</span><span class="brand-sub">Appareils · configuration</span></span>
+  </a>
+  <nav class="nav" aria-label="Navigation principale">
+    <a href="index.html" aria-current="page">Accueil</a>
+    <a href="bilan.html">Bilan télé</a>
+    <a href="boutique.html">Boutique</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <button class="calm-toggle" type="button" data-calm-toggle aria-pressed="false" title="Réduire les animations"><span class="sw" aria-hidden="true"></span><span class="txt-long">Mode calme</span><span class="txt-short">Calme</span></button>
+    <button class="cart-btn" type="button" data-cart-open aria-label="Ouvrir le panier">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 6h12l-1 11H5L4 6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M7 6V5a3 3 0 0 1 6 0v1" stroke="currentColor" stroke-width="1.7"/></svg>
+      <span class="txt">Panier</span><span class="cart-count" data-cart-count>0</span>
+    </button>
+    <button class="menu-btn" type="button" data-menu aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+  </div>
+</header>
+<nav class="mobile-nav" id="mobile-nav" aria-label="Navigation mobile" hidden>
+  <a href="index.html">Accueil <span class="label">CH 01</span></a>
+  <a href="bilan.html">Bilan télé <span class="label">3 questions</span></a>
+  <a href="boutique.html">Boutique <span class="label">5 appareils</span></a>
+  <a href="#contact">Contact <span class="label">CH 07</span></a>
+</nav>
+
+<div class="remote-rail" aria-hidden="true">
+  <div class="remote-host" style="position:absolute;inset:0"></div>
+  <div class="remote-hint"><span class="key">1</span>à<span class="key">7</span>changent de chaîne</div>
+</div>
+
+<main id="contenu">
+
+  <!-- CH 01 · Ouverture -->
+  <section class="hero ch dark" id="ouverture" data-channel="1" data-label="Ouverture" aria-labelledby="titre-ouverture">
+    <div class="scene" aria-hidden="true"><div class="tv-glow"></div><div class="floor"></div><div class="sofa"></div><div class="grain"></div></div>
+    <span class="ph-tag" style="right:max(16px, calc(var(--rail) + 16px));top:calc(var(--header-h) + 34px)">Visuel provisoire · photo Grok à venir</span>
+    <div class="hero-content wrap with-rail">
+      <div class="ch-tag" data-hero-in><span class="num">CH 01</span><span class="label">Centre-du-Québec · télé sans câble</span></div>
+      <h1 id="titre-ouverture" data-split="intro">Gardez vos émissions. <span class="accent">Allégez la facture.</span></h1>
+      <p class="lead" data-hero-in>Tv-Centre du Québec vous aide à remplacer le câble par une solution légale : le bon appareil, configuré à distance, et les services officiels qui correspondent à ce que vous regardez.</p>
+      <div class="hero-ctas" data-hero-in>
+        <a class="btn btn--signal" href="bilan.html" data-magnetic>Faire mon bilan télé <span class="arrow">→</span></a>
+        <a class="btn btn--ghost" href="#appareils" data-magnetic>Voir les 5 appareils</a>
+      </div>
+      <div class="hero-meta label" data-hero-in>
+        <span>Appareils 4K de 180 à 350 $</span><span>Configuration à distance</span><span>Interac ou carte de crédit</span>
+      </div>
+      <div class="hero-remote" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- CH 02 · Économies -->
+  <section class="ch" id="economies" data-channel="2" data-label="Économies" aria-labelledby="titre-economies">
+    <div class="wrap with-rail">
+      <div class="ch-tag"><span class="num">CH 02</span><span class="label">La facture qui fond</span><span class="line"></span></div>
+      <div class="savings">
+        <div class="savings-text">
+          <h2 class="h2" id="titre-economies" data-split>Chaque ligne de votre facture mérite une question.</h2>
+          <p class="lead">Le bilan télé passe en revue ce que vous payez et ce que vous regardez vraiment. Les lignes inutiles disparaissent, ce que vous aimez reste.</p>
+          <div class="hero-ctas"><a class="btn" href="bilan.html" data-magnetic>Calculer mes économies <span class="arrow">→</span></a></div>
+          <p class="muted" style="font-size:.9rem">3 questions · environ une minute · aucun compte à créer</p>
+        </div>
+        <div class="bill-stage">
+          <div class="envelope" aria-hidden="true"></div>
+          <span class="ph-tag light" style="left:0;bottom:0">Visuel provisoire · enveloppe Grok à venir</span>
+          <div class="bill" aria-label="Facture d’exemple, montants fictifs">
+            <div class="bill-head"><strong>Facture télé</strong><span class="badge-demo">Exemple</span></div>
+            <div class="bill-row" data-amount="45"><span>Forfait télé de base</span><span>45,00 $</span><span class="strike" aria-hidden="true"></span></div>
+            <div class="bill-row" data-amount="32"><span>Chaînes thématiques</span><span>32,00 $</span><span class="strike" aria-hidden="true"></span></div>
+            <div class="bill-row" data-amount="15"><span>Location du terminal</span><span>15,00 $</span><span class="strike" aria-hidden="true"></span></div>
+            <div class="bill-row" data-amount="12"><span>Frais de service</span><span>12,00 $</span><span class="strike" aria-hidden="true"></span></div>
+            <div class="bill-total"><span>Total par mois</span><span class="amount" data-total data-after="38">104,00 $</span></div>
+            <div class="bill-after"><span>Remplacé par les services choisis</span><span class="amount">38,00 $</span></div>
+            <p class="bill-note">Montants fictifs, avant taxes, pour illustrer le calcul. Le bilan télé utilise vos propres montants.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CH 03 · Appareils -->
+  <section class="ch dark ch-devices" id="appareils" data-channel="3" data-label="Appareils" data-remote="hide" aria-labelledby="titre-appareils">
+    <div class="wrap">
+      <div class="ch-tag"><span class="num">CH 03</span><span class="label">Les appareils</span><span class="line"></span></div>
+      <div class="devices-head">
+        <h2 class="h2" id="titre-appareils" data-split>Cinq appareils 4K, de 180 à 350 $.</h2>
+        <p class="lead">Des boîtiers ONN et Formuler qui se branchent sur le port HDMI de votre téléviseur. Vous choisissez, nous configurons.</p>
+      </div>
+      <div class="h-viewport">
+        <div class="h-track" id="device-track" tabindex="0" aria-label="Galerie des appareils, défilement horizontal"></div>
+      </div>
+      <div class="h-progress" aria-hidden="true"><span></span></div>
+    </div>
+  </section>
+
+  <!-- CH 04 · Comment ça marche -->
+  <section class="ch ch-how" id="fonctionnement" data-channel="4" data-label="Comment ça marche" aria-labelledby="titre-fonctionnement">
+    <div class="wrap with-rail">
+      <div class="ch-tag"><span class="num">CH 04</span><span class="label">Comment ça marche</span><span class="line"></span></div>
+      <div class="how">
+        <div style="display:grid;gap:28px;align-content:start">
+          <h2 class="h2" id="titre-fonctionnement" data-split>Vous choisissez. On configure. Vous regardez.</h2>
+          <ol class="steps">
+            <li class="step"><span class="n">1</span><h3>Vous choisissez</h3><p>Un appareil de la boutique, ou celui que le bilan télé vous recommande. Paiement par virement Interac ou par carte de crédit.</p></li>
+            <li class="step"><span class="n">2</span><h3>On configure à distance</h3><p>Écrivez-nous : l’appareil est configuré à distance avec les applications officielles qui vous conviennent. <span class="todo">délai et conditions à compléter</span></p></li>
+            <li class="step"><span class="n">3</span><h3>Vous regardez</h3><p>Branchez l’appareil sur le port HDMI, reliez-le au Wi-Fi ou par câble Ethernet selon le modèle, et c’est prêt.</p></li>
+          </ol>
+        </div>
+        <div class="how-visuals">
+          <div class="map-card">
+            <div class="map-top"><span class="label muted-dark">Centre-du-Québec</span><span class="badge-demo">Carte stylisée</span></div>
+            <svg viewBox="0 0 600 380" role="img" aria-label="Carte stylisée du Centre-du-Québec : Bécancour, Nicolet, Drummondville, Victoriaville et Plessisville. Une liaison relie le conseiller à un salon pour la configuration à distance.">
+              <defs>
+                <pattern id="dots" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#3a3c44"/></pattern>
+              </defs>
+              <rect width="600" height="380" fill="url(#dots)"/>
+              <path d="M30 190 L102 156 L149 129 L185 112 L246 95 L336 71 L462 40 L570 20" fill="none" stroke="#2c3b57" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="300" y="66" fill="#6f84a8" font-family="Geist Mono, monospace" font-size="11" letter-spacing="2" transform="rotate(-12 300 66)">FLEUVE SAINT-LAURENT</text>
+              <path d="M60 182 L120 146 L200 124 L300 104 L430 82 L522 122 L502 222 L432 300 L300 344 L196 332 L128 282 L80 232 Z" fill="rgba(255,90,31,0.06)" stroke="#ff5a1f" stroke-opacity=".55" stroke-width="1.5" stroke-dasharray="6 6"/>
+              <g font-family="Geist Mono, monospace" font-size="12" fill="#c9cad1">
+                <circle cx="217" cy="128" r="4" fill="#ececef"/><text x="226" y="132">Bécancour</text>
+                <circle cx="151" cy="160" r="4" fill="#ececef"/><text x="104" y="182">Nicolet</text>
+                <circle cx="198" cy="271" r="4" fill="#ececef"/><text x="134" y="294">Drummondville</text>
+                <circle cx="384" cy="214" r="4" fill="#ececef"/><text x="393" y="218">Victoriaville</text>
+                <circle cx="453" cy="157" r="4" fill="#ececef"/><text x="462" y="161">Plessisville</text>
+              </g>
+              <path class="link-path" d="M290 196 C 320 150, 400 170, 420 258" fill="none" stroke="#ff5a1f" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 0"/>
+              <g>
+                <rect x="268" y="178" width="44" height="34" rx="8" fill="#ff5a1f"/>
+                <path d="M279 202 h22 M284 190 h12 v8 h-12 z" stroke="#16110e" stroke-width="2" fill="none"/>
+                <text x="290" y="232" text-anchor="middle" font-family="Geist Mono, monospace" font-size="10" fill="#a1a3ad" letter-spacing="1">CONSEILLER</text>
+              </g>
+              <g>
+                <circle class="wave" cx="420" cy="262" r="4" fill="none" stroke="#ff5a1f" stroke-width="2" opacity="0"/>
+                <circle class="wave" cx="420" cy="262" r="4" fill="none" stroke="#ff5a1f" stroke-width="2" opacity="0"/>
+                <circle class="wave" cx="420" cy="262" r="4" fill="none" stroke="#ff5a1f" stroke-width="2" opacity="0"/>
+                <path d="M404 270 L404 256 L420 244 L436 256 L436 270 Z" fill="#ececef"/>
+                <rect x="414" y="260" width="12" height="8" rx="1.5" fill="#ff5a1f"/>
+                <text x="420" y="290" text-anchor="middle" font-family="Geist Mono, monospace" font-size="10" fill="#a1a3ad" letter-spacing="1">VOTRE SALON</text>
+              </g>
+              <text x="512" y="352" text-anchor="end" font-family="Geist Mono, monospace" font-size="10" fill="#ff8a5c">ZONE DESSERVIE À CONFIRMER</text>
+            </svg>
+            <div class="config-bar" aria-hidden="true">
+              <div class="row"><span data-step-label>Appareil choisi</span><span class="pct">0 %</span></div>
+              <div class="track"><div class="fill"></div></div>
+            </div>
+          </div>
+          <div class="how-photo">
+            <img src="img/appareils/formuler-z-mini-474.webp" alt="Formuler Z Mini avec sa boîte et sa télécommande" width="474" height="419" loading="lazy">
+            <span class="ph-tag light" style="left:12px;top:12px">Photo du site actuel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CH 05 · Guide légal -->
+  <section class="ch dark ch-guide" id="guide" data-channel="5" data-label="Guide légal" data-remote="hide" aria-labelledby="titre-guide">
+    <div class="wrap">
+      <div class="ch-tag"><span class="num">CH 05</span><span class="label">Guide des solutions légales</span><span class="line"></span></div>
+      <div class="guide-head">
+        <h2 class="h2" id="titre-guide" data-split>Ce que vous regardez, sans le câble.</h2>
+        <p class="lead">Pour chaque type d’émission, une façon légale de la regarder : l’antenne pour les chaînes généralistes, les applications officielles pour le reste.</p>
+      </div>
+      <div class="epg-scroll" tabindex="0" aria-label="Grille des solutions légales par type d’émission, défilement horizontal">
+        <div class="epg">
+          <div class="epg-corner">Grille de démonstration</div>
+          <div class="epg-time">18 h</div><div class="epg-time">19 h</div><div class="epg-time">20 h</div><div class="epg-time">21 h</div><div class="epg-time">22 h</div>
+
+          <div class="epg-row-head"><div class="ph ph-news" aria-hidden="true"></div><h3 class="cat">Nouvelles et télé générale</h3></div>
+          <div class="epg-cell free" style="grid-column:span 2"><span class="k">Gratuit</span><div><div class="t">Antenne numérique</div><div class="d">Les chaînes généralistes captées selon votre secteur.</div></div></div>
+          <div class="epg-cell"><span class="k">Application</span><div><div class="t">ICI TOU.TV</div><div class="d">Radio-Canada en ligne</div></div></div>
+          <div class="epg-cell"><span class="k">Application</span><div><div class="t">TVA+</div><div class="d">Application officielle</div></div></div>
+          <div class="epg-cell"><span class="k">Application</span><div><div class="t">Noovo.ca</div><div class="d">Application officielle</div></div></div>
+
+          <div class="epg-row-head"><div class="ph ph-series" aria-hidden="true"></div><h3 class="cat">Séries</h3></div>
+          <div class="epg-cell" style="grid-column:span 2"><span class="k">Abonnement</span><div><div class="t">Crave</div><div class="d">Séries et films</div></div></div>
+          <div class="epg-cell"><span class="k">Abonnement</span><div><div class="t">Club illico</div><div class="d">Séries d’ici</div></div></div>
+          <div class="epg-cell" style="grid-column:span 2"><span class="k">Abonnement</span><div><div class="t">Netflix</div><div class="d">Séries et films</div></div></div>
+
+          <div class="epg-row-head"><div class="ph ph-films" aria-hidden="true"></div><h3 class="cat">Films</h3></div>
+          <div class="epg-cell"><span class="k">Abonnement</span><div><div class="t">Netflix</div></div></div>
+          <div class="epg-cell" style="grid-column:span 2"><span class="k">Abonnement ou location</span><div><div class="t">Prime Video</div><div class="d">Catalogue et films en location</div></div></div>
+          <div class="epg-cell"><span class="k">Abonnement</span><div><div class="t">Crave</div></div></div>
+          <div class="epg-cell"><span class="k">Abonnement</span><div><div class="t">Club illico</div></div></div>
+
+          <div class="epg-row-head"><div class="ph ph-sport" aria-hidden="true"></div><h3 class="cat">Sport</h3></div>
+          <div class="epg-cell" style="grid-column:span 3"><span class="k">Annonce de Bell, 2024</span><div><div class="t">RDS sur Prime Video</div><div class="d">Chaîne offerte en option aux abonnés Prime au Canada.</div></div></div>
+          <div class="epg-cell" style="grid-column:span 2"><span class="k">À compléter</span><div><div class="t">Autres sports</div><div class="d">Services à confirmer selon les ligues suivies.</div></div></div>
+
+          <div class="epg-row-head"><div class="ph ph-jeunesse" aria-hidden="true"></div><h3 class="cat">Jeunesse</h3></div>
+          <div class="epg-cell"><span class="k">Application</span><div><div class="t">ICI TOU.TV</div></div></div>
+          <div class="epg-cell" style="grid-column:span 2"><span class="k">Abonnement</span><div><div class="t">Disney+</div><div class="d">Films et séries jeunesse</div></div></div>
+          <div class="epg-cell"><span class="k">Abonnement</span><div><div class="t">Netflix</div></div></div>
+          <div class="epg-cell free"><span class="k">Gratuit</span><div><div class="t">Antenne numérique</div></div></div>
+
+          <div class="epg-playhead" aria-hidden="true"></div>
+        </div>
+      </div>
+      <p class="guide-note">Services cités à titre d’exemple, sans affiliation avec Tv-Centre du Québec. Contenus, disponibilité et prix à vérifier sur le site de chaque service. Les chaînes captées à l’antenne dépendent de votre adresse.</p>
+    </div>
+  </section>
+
+  <!-- CH 06 · Fidélité -->
+  <section class="ch" id="fidelite" data-channel="6" data-label="Fidélité" aria-labelledby="titre-fidelite">
+    <div class="wrap with-rail">
+      <div class="ch-tag"><span class="num">CH 06</span><span class="label">Programme de fidélité</span><span class="line"></span></div>
+      <div class="loyal">
+        <div style="display:grid;gap:22px">
+          <h2 class="h2" id="titre-fidelite" data-split>Chaque achat rapporte des points.</h2>
+          <p class="lead">Inscrivez-vous et recevez 20 points. Ensuite, chaque article acheté rapporte 5 à 15 points selon votre niveau, et 100 points valent 10 $ de réduction.</p>
+        </div>
+        <div class="tiers" data-reveal-stagger>
+          <div class="tier" data-tier="basique">
+            <div class="tier-inner">
+              <div class="tier-face tier-front"><span class="seuil">0 point requis</span><div><div class="name">Basique</div><span class="flip-hint">Retourner la carte ↻</span></div></div>
+              <div class="tier-face tier-back"><dl><div><dt>Achat d’un article</dt><dd>5 points</dd></div><div><dt>Inscription au site</dt><dd>20 points</dd></div><div><dt>Récompense</dt><dd>100 points = 10 $</dd></div></dl></div>
+            </div>
+            <button class="tier-flip-btn" type="button" aria-pressed="false" aria-label="Voir les avantages du niveau Basique"></button>
+          </div>
+          <div class="tier" data-tier="argent">
+            <div class="tier-inner">
+              <div class="tier-face tier-front"><span class="seuil">100 points gagnés</span><div><div class="name">Argent</div><span class="flip-hint">Retourner la carte ↻</span></div></div>
+              <div class="tier-face tier-back"><dl><div><dt>Achat d’un article</dt><dd>10 points</dd></div><div><dt>Inscription au site</dt><dd>20 points</dd></div><div><dt>Récompense</dt><dd>100 points = 10 $</dd></div></dl></div>
+            </div>
+            <button class="tier-flip-btn" type="button" aria-pressed="false" aria-label="Voir les avantages du niveau Argent"></button>
+          </div>
+          <div class="tier" data-tier="or">
+            <div class="tier-inner">
+              <div class="tier-face tier-front"><span class="seuil">200 points gagnés</span><div><div class="name">Or</div><span class="flip-hint">Retourner la carte ↻</span></div></div>
+              <div class="tier-face tier-back"><dl><div><dt>Achat d’un article</dt><dd>15 points</dd></div><div><dt>Inscription au site</dt><dd>20 points</dd></div><div><dt>Récompense</dt><dd>100 points = 10 $</dd></div></dl></div>
+            </div>
+            <button class="tier-flip-btn" type="button" aria-pressed="false" aria-label="Voir les avantages du niveau Or"></button>
+          </div>
+        </div>
+        <div class="gauge" data-points="120" data-max="200" data-reveal>
+          <div class="gauge-top">
+            <div><span class="label muted">Exemple de membre</span><div class="gauge-pts"><span>120</span> points</div></div>
+            <span class="badge-demo">Illustratif</span>
+          </div>
+          <div class="gauge-track"><div class="gauge-fill"></div></div>
+          <div class="gauge-marks"><span style="left:0">Basique · 0</span><span style="left:50%">Argent · 100</span><span style="left:100%">Or · 200</span></div>
+          <p class="muted">À 120 points, ce membre est au niveau Argent : 10 points par article acheté, et 100 points échangeables contre 10 $ de réduction.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CH 07 · Contact -->
+  <section class="ch dark contact" id="contact" data-channel="7" data-label="Contact" aria-labelledby="titre-contact">
+    <div class="scene" aria-hidden="true"><div class="tv-glow"></div><div class="grain"></div></div>
+    <div class="wrap with-rail">
+      <div class="ch-tag"><span class="num">CH 07</span><span class="label">Contact</span><span class="line"></span></div>
+      <div class="contact-grid">
+        <div style="display:grid;gap:26px;align-content:start">
+          <h2 class="h2" id="titre-contact" data-split>On vous rappelle et on regarde votre facture avec vous.</h2>
+          <form class="form" id="form-rappel" novalidate>
+            <div class="form-row">
+              <div class="field"><label for="f-prenom">Prénom *</label><input id="f-prenom" name="prenom" autocomplete="given-name" required><span class="err" data-err-for="f-prenom" aria-live="polite"></span></div>
+              <div class="field"><label for="f-nom">Nom</label><input id="f-nom" name="nom" autocomplete="family-name"></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label for="f-courriel">Courriel *</label><input id="f-courriel" name="courriel" type="email" autocomplete="email" required><span class="err" data-err-for="f-courriel" aria-live="polite"></span></div>
+              <div class="field"><label for="f-tel">Téléphone</label><input id="f-tel" name="tel" type="tel" autocomplete="tel"></div>
+            </div>
+            <div class="field"><label for="f-moment">Meilleur moment pour vous joindre</label>
+              <select id="f-moment" name="moment"><option>Matin</option><option>Après-midi</option><option>Soir</option></select></div>
+            <div class="field"><label for="f-message">Ce que vous regardez, votre facture actuelle</label><textarea id="f-message" name="message" placeholder="Par exemple : nouvelles, hockey, séries d’ici. Facture d’environ 110 $ par mois."></textarea></div>
+            <button class="btn btn--signal" type="submit" data-magnetic>Demander un rappel <span class="arrow">→</span></button>
+            <p class="form-note">Maquette : le formulaire fonctionne, mais aucun message n’est envoyé.</p>
+          </form>
+          <div class="form-done" id="form-done" tabindex="-1" hidden>
+            <span class="badge-demo">Simulation</span>
+            <p style="font-size:1.4rem;font-weight:600;letter-spacing:-.02em">Merci <span data-name></span>.</p>
+            <p class="muted-dark">Demande simulée. Sur le site en ligne, Tv-Centre du Québec recevrait votre demande et vous rappellerait au moment choisi.</p>
+            <button class="btn btn--ghost btn--sm" type="button" id="form-again">Faire une autre demande</button>
+          </div>
+        </div>
+        <div class="coords">
+          <div class="item"><span class="label muted-dark">Courriel</span><span class="v"><span class="todo">à compléter</span></span></div>
+          <div class="item"><span class="label muted-dark">Téléphone</span><span class="v"><span class="todo">à compléter</span></span></div>
+          <div class="item"><span class="label muted-dark">Zone desservie</span><span class="v">Centre-du-Québec <span class="todo">villes à préciser</span></span></div>
+          <div class="item"><span class="label muted-dark">Entreprise</span><span class="v">Adresse et NEQ <span class="todo">à compléter</span></span></div>
+          <div class="item"><span class="label muted-dark">Paiement accepté</span><div class="pay"><span>Virement Interac</span><span>Carte de crédit · lien par courriel</span></div></div>
+          <div class="item"><span class="label muted-dark">Facebook</span><span class="v">Page existante <span class="todo">lien à confirmer</span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap with-rail">
+    <div class="footer-grid">
+      <div style="display:grid;gap:12px;align-content:start">
+        <span class="brand-name">Tv-Centre du Québec</span>
+        <p>Appareils 4K, configuration à distance et solutions légales pour regarder la télé sans le câble.</p>
+      </div>
+      <nav aria-label="Pied de page"><span class="label">Pages</span><a href="index.html">Accueil</a><a href="bilan.html">Bilan télé</a><a href="boutique.html">Boutique</a><a href="#contact">Contact</a></nav>
+      <div style="display:grid;gap:8px;align-content:start"><span class="label">Raccourcis</span><span>Touches <span class="key">1</span> à <span class="key">7</span> : changer de chaîne</span><span>Mode calme : moins d’animations</span></div>
+    </div>
+    <div class="footer-note">
+      <span>Maquette de présentation, octobre 2026. Les montants marqués « exemple » ou « illustratif » sont fictifs.</span>
+      <span>Mentions légales et politique de confidentialité : <span class="todo">à compléter</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js" defer></script>
+<script src="vendor/ScrollTrigger.min.js" defer></script>
+<script src="vendor/SplitText.min.js" defer></script>
+<script src="vendor/DrawSVGPlugin.min.js" defer></script>
+<script src="vendor/ScrambleTextPlugin.min.js" defer></script>
+<script src="vendor/lenis.min.js" defer></script>
+<script src="js/data.js" defer></script>
+<script src="js/core.js" defer></script>
+<script src="js/home.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bilan télé · Tv-Centre du Québec</title>
+<meta name="description" content="Trois questions pour estimer ce que vous économiseriez en remplaçant le câble par un appareil 4K et des services légaux.">
+<meta name="theme-color" content="#1c1d22">
+<link rel="icon" href="img/logo-icone.webp" type="image/webp">
+<link rel="preload" href="fonts/geist.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="fonts/geist-mono.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip" href="#bilan">Aller au bilan</a>
+
+<header class="site-header">
+  <a class="brand" href="index.html" aria-label="Tv-Centre du Québec, accueil">
+    <span class="brand-chip"><img src="img/logo-icone.webp" alt="" width="30" height="35"></span>
+    <span class="brand-text"><span class="brand-name">Tv-Centre du Québec</span><span class="brand-sub">Appareils · configuration</span></span>
+  </a>
+  <nav class="nav" aria-label="Navigation principale">
+    <a href="index.html">Accueil</a>
+    <a href="bilan.html" aria-current="page">Bilan télé</a>
+    <a href="boutique.html">Boutique</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <button class="calm-toggle" type="button" data-calm-toggle aria-pressed="false" title="Réduire les animations"><span class="sw" aria-hidden="true"></span><span class="txt-long">Mode calme</span><span class="txt-short">Calme</span></button>
+    <button class="cart-btn" type="button" data-cart-open aria-label="Ouvrir le panier">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 6h12l-1 11H5L4 6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M7 6V5a3 3 0 0 1 6 0v1" stroke="currentColor" stroke-width="1.7"/></svg>
+      <span class="txt">Panier</span><span class="cart-count" data-cart-count>0</span>
+    </button>
+    <button class="menu-btn" type="button" data-menu aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+  </div>
+</header>
+<nav class="mobile-nav" id="mobile-nav" aria-label="Navigation mobile" hidden>
+  <a href="index.html">Accueil <span class="label">CH 01</span></a>
+  <a href="bilan.html">Bilan télé <span class="label">3 questions</span></a>
+  <a href="boutique.html">Boutique <span class="label">5 appareils</span></a>
+  <a href="index.html#contact">Contact <span class="label">CH 07</span></a>
+</nav>
+
+<div class="remote-rail" aria-hidden="true">
+  <div class="remote-host" style="position:absolute;inset:0"></div>
+  <div class="remote-hint">Tapez le montant sur la télécommande</div>
+</div>
+
+<main>
+  <section class="page-hero dark">
+    <div class="kitchen" aria-hidden="true"><div class="sheet a"></div><div class="sheet b"></div></div>
+    <span class="ph-tag" style="right:max(16px, calc(var(--rail) + 16px));top:calc(var(--header-h) + 34px)">Visuel provisoire · photo Grok à venir</span>
+    <div class="wrap with-rail">
+      <div class="crumbs label"><a href="index.html">Accueil</a><span>/</span><span>Bilan télé</span></div>
+      <h1 data-split="intro" data-delay="0.35">Votre bilan télé en trois questions.</h1>
+      <p class="lead">Entrez votre facture, ce que vous regardez et votre type de téléviseur. Le bilan estime vos économies et l’appareil qui vous convient.</p>
+    </div>
+  </section>
+
+  <section class="wrap with-rail" id="bilan" aria-label="Bilan télé">
+    <div class="wizard">
+      <div class="wiz-tabs" role="tablist" aria-label="Étapes du bilan">
+        <button class="wiz-tab" role="tab" id="tab-1" aria-controls="step-1" aria-selected="true" type="button"><span class="n">1</span>Votre facture</button>
+        <button class="wiz-tab" role="tab" id="tab-2" aria-controls="step-2" aria-selected="false" tabindex="-1" type="button"><span class="n">2</span>Ce que vous regardez</button>
+        <button class="wiz-tab" role="tab" id="tab-3" aria-controls="step-3" aria-selected="false" tabindex="-1" type="button"><span class="n">3</span>Votre téléviseur</button>
+      </div>
+
+      <div class="wiz-panel" role="tabpanel" id="step-1" aria-labelledby="tab-1">
+        <div class="wiz-q">
+          <span class="label muted">Question 1 sur 3</span>
+          <h2>Combien payez-vous pour la télé chaque mois ?</h2>
+          <p class="muted">Le montant de votre facture télé, taxes incluses. Utilisez le clavier ou le pavé ci-contre.</p>
+        </div>
+        <div class="keypad-wrap">
+          <label class="display" for="bill-input">
+            <span class="label muted-dark">Facture actuelle, par mois</span>
+            <span class="val"><input id="bill-input" inputmode="numeric" autocomplete="off" maxlength="4" value="120" aria-describedby="bill-hint" style="all:unset;width:3.15ch;caret-color:transparent"><span class="cur"> $</span><span class="caret" aria-hidden="true"></span></span>
+            <span class="hint" id="bill-hint" data-bill-hint>Montant d’exemple, remplacez-le par le vôtre.</span>
+          </label>
+          <div class="keypad" role="group" aria-label="Pavé numérique">
+            <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+            <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+            <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+            <button type="button" class="fn" data-k="del" aria-label="Effacer un chiffre">⌫</button><button type="button" data-k="0">0</button><button type="button" class="ok" data-k="ok" aria-label="Valider et passer à la question 2">OK</button>
+          </div>
+        </div>
+        <div class="wiz-nav"><span></span><button class="btn btn--signal" type="button" data-next data-magnetic>Question suivante <span class="arrow">→</span></button></div>
+      </div>
+
+      <div class="wiz-panel" role="tabpanel" id="step-2" aria-labelledby="tab-2" hidden>
+        <div class="wiz-q">
+          <span class="label muted">Question 2 sur 3</span>
+          <h2>Qu’est-ce que vous regardez ?</h2>
+          <p class="muted">Choisissez tout ce qui compte pour vous. Pour chaque choix, indiquez ce que vous paieriez par mois pour le service légal correspondant.</p>
+        </div>
+        <div class="chips" role="group" aria-label="Types d’émissions" data-cats></div>
+        <div class="amounts" data-amounts></div>
+        <p class="muted" style="font-size:.85rem">Les montants proposés sont des exemples, modifiables. Vérifiez les tarifs réels sur le site de chaque service.</p>
+        <div class="wiz-nav"><button class="btn btn--ghost" type="button" data-prev>← Question 1</button><button class="btn btn--signal" type="button" data-next data-magnetic>Question suivante <span class="arrow">→</span></button></div>
+      </div>
+
+      <div class="wiz-panel" role="tabpanel" id="step-3" aria-labelledby="tab-3" hidden>
+        <div class="wiz-q">
+          <span class="label muted">Question 3 sur 3</span>
+          <h2>Quel téléviseur avez-vous ?</h2>
+        </div>
+        <div class="chips" role="radiogroup" aria-label="Type de téléviseur" data-tv>
+          <button class="chip" type="button" role="radio" aria-checked="false" data-v="intelligent"><span class="box"></span>Téléviseur intelligent avec applications</button>
+          <button class="chip" type="button" role="radio" aria-checked="true" data-v="simple"><span class="box"></span>Téléviseur sans applications, ou applications trop lentes</button>
+        </div>
+        <div class="wiz-q" style="margin-top:6px"><h3 style="font-size:1.25rem;letter-spacing:-.02em">Ce qui compte le plus pour l’appareil</h3></div>
+        <div class="chips" role="radiogroup" aria-label="Priorité pour l’appareil" data-prio>
+          <button class="chip" type="button" role="radio" aria-checked="true" data-v="prix"><span class="box"></span>Le prix le plus bas</button>
+          <button class="chip" type="button" role="radio" aria-checked="false" data-v="compact"><span class="box"></span>Le plus compact</button>
+          <button class="chip" type="button" role="radio" aria-checked="false" data-v="filaire"><span class="box"></span>Un branchement Ethernet</button>
+          <button class="chip" type="button" role="radio" aria-checked="false" data-v="stockage"><span class="box"></span>Le plus de stockage</button>
+        </div>
+        <div class="wiz-nav"><button class="btn btn--ghost" type="button" data-prev>← Question 2</button><a class="btn btn--signal" href="#resultat" data-magnetic>Voir mon bilan <span class="arrow">↓</span></a></div>
+      </div>
+
+      <div class="result dark" id="resultat" aria-live="polite">
+        <div class="result-top">
+          <div style="display:grid;gap:6px"><span class="label muted-dark">Votre bilan</span><h2 style="font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-.04em">Ce que vous économiseriez</h2></div>
+          <span class="badge-demo" data-demo-badge>Estimation avec montants d’exemple</span>
+        </div>
+        <div class="kpis">
+          <div class="kpi main"><span class="label muted-dark">Par mois</span><span class="v" data-kpi="mois">0 $</span><span class="s" data-kpi-s="mois"></span></div>
+          <div class="kpi"><span class="label muted-dark">Par année</span><span class="v" data-kpi="an">0 $</span><span class="s">Économie mensuelle × 12</span></div>
+          <div class="kpi"><span class="label muted-dark">Appareil remboursé en</span><span class="v" data-kpi="retour">—</span><span class="s" data-kpi-s="retour"></span></div>
+        </div>
+        <div class="reco" data-product>
+          <div class="ph"><img data-product-img src="img/appareils/onn-4k-474.webp" alt="" width="474" height="310"></div>
+          <div style="display:grid;gap:12px">
+            <span class="label muted">Appareil conseillé</span>
+            <div class="row"><strong style="font-size:1.5rem;letter-spacing:-.03em" data-reco-name></strong><span class="mono" data-reco-price></span></div>
+            <p class="why" data-reco-why></p>
+            <div class="row"><button class="btn btn--signal btn--sm" type="button" data-add="onn-4k" data-reco-add>Ajouter au panier</button><a class="btn btn--ghost btn--sm" href="appareil.html#onn-4k" data-reco-link style="--fg:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)">Voir la fiche</a></div>
+          </div>
+        </div>
+        <div class="services">
+          <span class="label muted-dark">Solutions légales pour ce que vous regardez</span>
+          <ul data-services></ul>
+          <p class="muted-dark" style="font-size:.82rem">Services cités à titre d’exemple, sans affiliation. L’antenne capte les chaînes généralistes selon votre adresse.</p>
+        </div>
+        <div class="row" style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn--light" href="index.html#contact" data-magnetic>Être rappelé pour en parler <span class="arrow">→</span></a>
+          <a class="btn btn--ghost" href="boutique.html">Comparer les 5 appareils</a>
+        </div>
+        <p class="muted-dark" style="font-size:.8rem">Estimation fondée sur les montants saisis. Prix de l’appareil avec TPS (5 %) et TVQ (9,975 %). La livraison et les frais éventuels sont à compléter.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap with-rail">
+    <div class="footer-grid">
+      <div style="display:grid;gap:12px;align-content:start"><span class="brand-name">Tv-Centre du Québec</span><p>Appareils 4K, configuration à distance et solutions légales pour regarder la télé sans le câble.</p></div>
+      <nav aria-label="Pied de page"><span class="label">Pages</span><a href="index.html">Accueil</a><a href="bilan.html">Bilan télé</a><a href="boutique.html">Boutique</a><a href="index.html#contact">Contact</a></nav>
+      <div style="display:grid;gap:8px;align-content:start"><span class="label">Raccourcis</span><span>Chiffres du clavier : saisir le montant</span><span>Entrée : question suivante</span></div>
+    </div>
+    <div class="footer-note"><span>Maquette de présentation, octobre 2026. Les montants marqués « exemple » sont fictifs.</span><span>Mentions légales et politique de confidentialité : <span class="todo">à compléter</span></span></div>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js" defer></script>
+<script src="vendor/ScrollTrigger.min.js" defer></script>
+<script src="vendor/SplitText.min.js" defer></script>
+<script src="vendor/ScrambleTextPlugin.min.js" defer></script>
+<script src="vendor/lenis.min.js" defer></script>
+<script src="js/data.js" defer></script>
+<script src="js/core.js" defer></script>
+<script src="js/bilan.js" defer></script>
+</body>
+</html>
