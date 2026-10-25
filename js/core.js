@@ -80,9 +80,20 @@
   /* ---------- Bandeau de chaîne ---------- */
   var osdState = { ch: '', lb: '' };
   var osdTimer = null;
+  var osdFirst = true;
+  osd.classList.add('is-off');
   function setOSD(ch, label) {
     if (osdState.ch === ch && osdState.lb === label) return;
     osdState = { ch: ch, lb: label };
+    var chEl0 = osd.querySelector('.osd-ch');
+    var lbEl0 = osd.querySelector('.osd-lb');
+    if (osdFirst) {
+      // au chargement, le bandeau reste caché : il n'apparaît qu'au changement de chaîne
+      osdFirst = false;
+      chEl0.textContent = ch;
+      lbEl0.textContent = label;
+      return;
+    }
     // comme sur un téléviseur : le bandeau apparaît au changement de chaîne puis s'efface
     clearTimeout(osdTimer);
     osd.classList.remove('is-off');
@@ -245,6 +256,9 @@
   if (fromNav && !document.body.hasAttribute('data-intro')) screenOn();
   window.addEventListener('pageshow', function (e) { if (e.persisted) screen.hidden = true; });
 
+  function cleanPath(p) { return p.replace(/\.html$/, '').replace(/\/index$/, '/').replace(/\/$/, '') || '/'; }
+  function samePage(a, b) { return cleanPath(a) === cleanPath(b); }
+
   // départ vers une autre page
   document.addEventListener('click', function (e) {
     if (calm || !hasGsap || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -253,23 +267,39 @@
     var url;
     try { url = new URL(a.getAttribute('href'), location.href); } catch (err) { return; }
     if (url.origin !== location.origin) return;
-    if (url.pathname === location.pathname && url.search === location.search) return; // ancre interne
+    if (samePage(url.pathname, location.pathname) && url.search === location.search) return; // même page : ancre
     e.preventDefault();
     session.set('tvcq-nav', '1');
     screenOff(function () { location.href = url.href; });
   });
 
-  // ancres internes : défilement fluide
+  // ancres internes : défilement fluide (aussi pour « index.html#contact » depuis l'accueil)
   document.addEventListener('click', function (e) {
-    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
-    if (!a) return;
-    var id = a.getAttribute('href').slice(1);
+    var a = e.target.closest ? e.target.closest('a[href*="#"]') : null;
+    if (!a || e.defaultPrevented) return;
+    var u;
+    try { u = new URL(a.getAttribute('href'), location.href); } catch (err) { return; }
+    if (u.origin !== location.origin || !samePage(u.pathname, location.pathname)) return;
+    var id = decodeURIComponent(u.hash.slice(1));
     var target = id && document.getElementById(id);
     if (!target) return;
     e.preventDefault();
     scrollTo(target);
-    if (history.replaceState) history.replaceState(null, '', '#' + id);
-  });
+    focusTarget(target);
+    if (history.replaceState && !document.body.hasAttribute('data-hash-route')) history.replaceState(null, '', '#' + id);
+  }, true);
+
+  function focusTarget(t) {
+    if (!t.matches('a[href], button, input, select, textarea, [tabindex]')) t.setAttribute('tabindex', '-1');
+    try { t.focus({ preventScroll: true }); } catch (err) { t.focus(); }
+  }
+
+  // raccourcis à une touche : seulement quand aucun champ ni bouton n'a le focus, et jamais en mode calme
+  function shortcutsAllowed(e) {
+    if (calm || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return false;
+    var a = document.activeElement;
+    return !a || a === document.body || a === document.documentElement;
+  }
 
   /* ---------- En-tête : menu mobile, mode calme ---------- */
   var menuBtn = document.querySelector('[data-menu]');
@@ -289,18 +319,28 @@
     b.setAttribute('aria-pressed', String(calm));
     b.addEventListener('click', function () {
       local.set('tvcq-calme', calm ? '0' : '1');
+      window.dispatchEvent(new Event('tvcq:save'));
       location.reload();
     });
   });
 
   /* ---------- Panier ---------- */
   var CART_KEY = 'tvcq-panier';
-  var cart = (function () {
+  function readCart() {
     try {
       var o = JSON.parse(local.get(CART_KEY) || '{}');
       return o && typeof o === 'object' ? o : {};
     } catch (e) { return {}; }
-  })();
+  }
+  var cart = readCart();
+  window.addEventListener('storage', function (e) {
+    if (e.key !== CART_KEY) return;
+    cart = readCart(); updateCount(); renderCart();
+  });
+  window.addEventListener('pageshow', function (e) {
+    if (!e.persisted) return;
+    cart = readCart(); updateCount(); renderCart();
+  });
   var cartView = 'list';
   var payChoice = '';
 
@@ -323,12 +363,15 @@
   function updateCount() {
     var n = totals().articles;
     document.querySelectorAll('[data-cart-count]').forEach(function (c) { c.textContent = n; });
+    document.querySelectorAll('[data-cart-open]').forEach(function (b) {
+      b.setAttribute('aria-label', 'Ouvrir le panier, ' + n + (n > 1 ? ' articles' : ' article'));
+    });
   }
 
   var scrim = el('<div class="cart-scrim" hidden></div>');
   var drawer = el(
-    '<aside class="cart" role="dialog" aria-modal="true" aria-labelledby="cart-title" hidden>' +
-      '<div class="cart-head"><h2 id="cart-title">Panier</h2>' +
+    '<aside class="cart" role="dialog" aria-modal="true" aria-labelledby="cart-title" data-lenis-prevent hidden>' +
+      '<div class="cart-head"><h2 id="cart-title" tabindex="-1">Panier</h2>' +
       '<button class="icon-btn" type="button" data-cart-close aria-label="Fermer le panier">' +
       '<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 3l12 12M15 3L3 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>' +
       '<div class="cart-body" data-lenis-prevent></div>' +
@@ -386,7 +429,7 @@
     cartFoot.hidden = false;
     cartBody.innerHTML = '<div class="cart-done">' +
       '<span class="badge-demo">Simulation</span>' +
-      '<p class="big">Commande simulée</p>' +
+      '<p class="big" tabindex="-1">Commande simulée</p>' +
       '<p class="muted">Ceci est une maquette : aucune commande n’est transmise et aucun paiement n’est demandé.</p>' +
       '<div class="sum">' + ls.map(function (l) {
         return '<div><span>' + l.q + ' × ' + esc(l.a.court) + '</span><span>' + money(l.a.prix * l.q) + '</span></div>';
@@ -397,13 +440,20 @@
     cartFoot.innerHTML = '<button class="btn btn--block" type="button" data-cart-reset>Vider le panier et fermer</button>';
   }
 
+  function refocus(sel) {
+    var n = sel && drawer.querySelector(sel);
+    (n || drawer.querySelector('#cart-title')).focus();
+  }
   drawer.addEventListener('click', function (e) {
     var item = e.target.closest('.cart-item');
     var id = item && item.dataset.id;
-    if (e.target.closest('[data-inc]') && id) { cart[id] = (cart[id] || 0) + 1; persist(); }
-    else if (e.target.closest('[data-dec]') && id) { cart[id] = Math.max(0, (cart[id] || 0) - 1); if (!cart[id]) delete cart[id]; persist(); }
-    else if (e.target.closest('[data-rm]') && id) { delete cart[id]; persist(); }
-    else if (e.target.closest('[data-checkout]') && payChoice) { cartView = 'done'; renderDone(); }
+    if (e.target.closest('[data-inc]') && id) { cart[id] = (cart[id] || 0) + 1; persist(); refocus('.cart-item[data-id="' + id + '"] [data-inc]'); }
+    else if (e.target.closest('[data-dec]') && id) {
+      cart[id] = Math.max(0, (cart[id] || 0) - 1); if (!cart[id]) delete cart[id]; persist();
+      refocus(cart[id] ? '.cart-item[data-id="' + id + '"] [data-dec]' : null);
+    }
+    else if (e.target.closest('[data-rm]') && id) { delete cart[id]; persist(); refocus(null); }
+    else if (e.target.closest('[data-checkout]') && payChoice) { cartView = 'done'; renderDone(); refocus('.cart-done .big'); }
     else if (e.target.closest('[data-cart-reset]')) { cart = {}; cartView = 'list'; payChoice = ''; persist(); closeCart(); }
     else if (e.target.closest('[data-cart-close]')) closeCart();
   });
@@ -415,21 +465,43 @@
     }
   });
   scrim.addEventListener('click', closeCart);
-  drawer.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeCart();
-    if (e.key === 'Tab') {
-      var f = drawer.querySelectorAll('button:not([disabled]), a[href], input');
-      if (!f.length) return;
-      var first = f[0], last = f[f.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !drawer.hidden) { e.preventDefault(); closeCart(); }
   });
+  // la tabulation boucle dans le tiroir (un seul arrêt par groupe de boutons radio)
+  function focusables() {
+    return Array.prototype.filter.call(drawer.querySelectorAll('button, a[href], input'), function (n) {
+      if (n.disabled || n.offsetParent === null) return false;
+      if (n.type === 'radio') {
+        var g = drawer.querySelectorAll('input[name="' + n.name + '"]');
+        var chk = Array.prototype.filter.call(g, function (x) { return x.checked; })[0];
+        return chk ? n === chk : n === g[0];
+      }
+      return true;
+    });
+  }
+  drawer.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    var f = focusables();
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    var a = document.activeElement;
+    if (e.shiftKey && (a === first || !drawer.contains(a) || a.id === 'cart-title')) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+  });
+  function setInert(on) {
+    Array.prototype.forEach.call(document.body.children, function (n) {
+      if (n === drawer || n === scrim || n === toastEl || n.tagName === 'SCRIPT') return;
+      if (on) n.setAttribute('inert', ''); else n.removeAttribute('inert');
+    });
+  }
 
   function openCart() {
     lastFocus = document.activeElement;
+    toastEl.hidden = true;
     if (cartView !== 'done') renderCart();
     scrim.hidden = false; drawer.hidden = false;
+    setInert(true);
     if (lenis) lenis.stop();
     if (hasGsap && !calm) {
       gsap.fromTo(drawer, { xPercent: 100 }, { xPercent: 0, duration: 0.55, ease: 'power4.out' });
@@ -440,6 +512,7 @@
   }
   function closeCart() {
     if (drawer.hidden) return;
+    setInert(false);
     var finish = function () {
       drawer.hidden = true; scrim.hidden = true;
       if (lenis) lenis.start();
@@ -524,6 +597,7 @@
   });
 
   window.TVCQ.ui = {
+    shortcutsAllowed: shortcutsAllowed, focusTarget: focusTarget,
     calm: calm, finePointer: finePointer, lenis: lenis, hasGsap: hasGsap,
     money: money, money0: money0, round2: round2, esc: esc, el: el,
     setOSD: setOSD, toast: toast, scrollTo: scrollTo,

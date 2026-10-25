@@ -28,11 +28,11 @@
       var d = i - cur;
       var ad = Math.abs(d);
       var props = {
-        xPercent: d * 64,
-        z: -ad * 260,
-        rotationY: -d * 28,
-        scale: 1 - Math.min(ad, 2) * 0.08,
-        opacity: ad > 2 ? 0 : 1 - ad * 0.25,
+        xPercent: d * 82,
+        z: -ad * 320,
+        rotationY: -d * 34,
+        scale: ad === 0 ? 1 : 0.78,
+        opacity: ad > 1 ? 0 : ad === 1 ? 0.5 : 1,
         zIndex: 10 - ad
       };
       it.classList.toggle('is-current', d === 0);
@@ -127,7 +127,7 @@
     if (a.specs.ethernet) tags.push('Ethernet');
     if (a.specs.garantie) tags.push('Garantie ' + a.specs.garantie);
     return '<article class="shop-card" data-product data-id="' + a.id + '">' +
-      '<a class="plinth" href="appareil.html#' + a.id + '" data-tilt="9" aria-label="Fiche de ' + ui.esc(a.nom) + '">' +
+      '<a class="plinth" href="appareil.html#' + a.id + '" data-tilt="9" tabindex="-1" aria-hidden="true">' +
         '<span class="tagline">' + tags.map(function (t) { return '<span>' + t + '</span>'; }).join('') + '</span>' +
         '<img data-product-img src="' + D.src(a) + '" srcset="' + D.srcset(a) + '" sizes="(min-width: 1040px) 30vw, (min-width: 640px) 46vw, 92vw" alt="' + ui.esc(a.nom) + ', photo du produit" loading="lazy" width="' + a.img.w[a.img.w.length - 1] + '" height="' + Math.round(a.img.w[a.img.w.length - 1] / a.img.ratio) + '">' +
       '</a>' +
@@ -136,7 +136,7 @@
         '<p class="muted" style="font-size:.92rem">' + ui.esc(a.accroche) + '</p>' +
         '<div class="facts">' + fact(a.specs.systeme) + fact(a.specs.stockage) + fact(a.specs.video) + '</div>' +
         '<div class="actions"><button class="btn btn--signal btn--sm" type="button" data-add="' + a.id + '">Ajouter au panier</button>' +
-        '<a class="btn btn--ghost btn--sm" href="appareil.html#' + a.id + '">Fiche</a></div>' +
+        '<a class="btn btn--ghost btn--sm" href="appareil.html#' + a.id + '" aria-label="Voir la fiche : ' + ui.esc(a.nom) + '">Fiche</a></div>' +
       '</div></article>';
   }
   function renderGrid(animate) {
@@ -156,7 +156,10 @@
     ui.boot(grid);
     if (animate && motion) gsap.from(grid.children, { y: 24, opacity: 0, duration: 0.5, stagger: 0.05, ease: 'power3.out' });
   }
-  [fPrix, fStock, fTri].forEach(function (f) { f.addEventListener('input', function () { renderGrid(true); }); });
+  // le curseur de prix met la liste à jour en continu, l'animation ne joue qu'au relâchement
+  fPrix.addEventListener('input', function () { renderGrid(false); });
+  fPrix.addEventListener('change', function () { renderGrid(true); });
+  [fStock, fTri].forEach(function (f) { f.addEventListener('change', function () { renderGrid(true); }); });
   fEth.addEventListener('click', function () {
     fEth.setAttribute('aria-pressed', String(fEth.getAttribute('aria-pressed') !== 'true'));
     renderGrid(true);

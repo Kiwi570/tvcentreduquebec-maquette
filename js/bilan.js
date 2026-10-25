@@ -6,8 +6,7 @@
   var ui = D.ui;
   var gsap = window.gsap;
   var motion = !ui.calm && !!gsap;
-  var wide = window.matchMedia('(min-width: 1100px)').matches;
-
+  
   var CATS = [
     { id: 'nouvelles', nom: 'Nouvelles et télé générale', ex: 0, services: 'Antenne numérique (gratuit selon votre secteur), ICI TOU.TV, TVA+, Noovo.ca' },
     { id: 'series', nom: 'Séries', ex: 20, services: 'Crave, Club illico, Netflix' },
@@ -30,24 +29,8 @@
   };
   CATS.forEach(function (c) { state.amounts[c.id] = c.ex; });
 
-  /* ---------- Télécommande ---------- */
-  var remote = null;
-  var host = wide ? document.querySelector('.remote-rail .remote-host') : null;
-  if (host) {
-    ui.mountRemote(host, { variant: 'rail', onKey: onRemoteKey }).then(function (r) {
-      remote = r;
-      if (r) r.powerOn();
-    });
-  }
-  function onRemoteKey(action) {
-    if (action.indexOf('ch:') === 0) { if (state.step !== 1) goStep(1); typeDigit(action.slice(3)); }
-    else if (action === 'ok' || action === 'ch+') goStep(Math.min(3, state.step + 1));
-    else if (action === 'back') { if (state.step === 1) deleteDigit(); else goStep(state.step - 1); }
-    else if (action === 'ch-') goStep(Math.max(1, state.step - 1));
-    else if (action === 'menu') ui.openCart();
-    else if (action === 'home' || action === 'power') location.href = 'index.html';
-  }
-  function press(action) { if (remote) remote.press(action); }
+  // le pavé numérique de la page joue le rôle de télécommande : pas de télécommande 3D ici
+  function press() {}
 
   /* ---------- Étapes ---------- */
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.wiz-tab'));
@@ -87,7 +70,7 @@
   function setBill(str, fromUser) {
     var clean = String(str).replace(/\D/g, '').replace(/^0+(?=\d)/, '').slice(0, 4);
     input.value = clean;
-    input.style.width = (Math.max(1, clean.length) + 0.15) + 'ch';
+    input.style.width = Math.max(1, clean.length) + 'ch';
     state.bill = parseInt(clean || '0', 10);
     if (fromUser) {
       state.billIsExample = false;
@@ -128,9 +111,12 @@
     else if (/^\d$/.test(e.key)) press('ch:' + e.key);
   });
   document.addEventListener('keydown', function (e) {
-    if (state.step !== 1 || e.metaKey || e.ctrlKey || e.altKey) return;
-    var t = e.target;
-    if (t === input || (t && t.closest && t.closest('input, textarea, select, .cart'))) return;
+    if (state.step !== 1 || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = document.activeElement;
+    // la saisie au clavier ne s'applique que dans le bilan (ou sans focus), jamais depuis un lien du menu
+    var inWizard = t && t.closest && t.closest('.wizard');
+    if (t && t !== document.body && !inWizard) return;
+    if (t === input || (t && t.closest && t.closest('input, textarea, select'))) return;
     if (/^\d$/.test(e.key)) { e.preventDefault(); typeDigit(e.key); press('ch:' + e.key); }
     else if (e.key === 'Backspace') { e.preventDefault(); deleteDigit(); press('back'); }
     else if (e.key === 'Enter' && !(t && t.closest && t.closest('button, a'))) { e.preventDefault(); press('ok'); goStep(2); }
@@ -162,9 +148,14 @@
     var id = e.target.dataset.amt;
     if (!id) return;
     var v = parseFloat(e.target.value.replace(',', '.').replace(/[^\d.]/g, ''));
-    state.amounts[id] = isNaN(v) ? 0 : Math.min(500, v);
+    state.amounts[id] = isNaN(v) ? 0 : Math.min(999, v);
     state.edited[id] = true;
     compute();
+  });
+
+  amountsEl.addEventListener('focusout', function (e) {
+    var id = e.target.dataset && e.target.dataset.amt;
+    if (id) e.target.value = String(state.amounts[id]).replace('.', ',');
   });
 
   /* ---------- Question 3 : téléviseur et priorité ---------- */
@@ -221,14 +212,16 @@
       ? 'Facture de ' + ui.money0(state.bill) + ' moins ' + ui.money0(monthly) + ' de services'
       : (state.bill > 0 ? 'Les services choisis coûtent autant ou plus que votre facture actuelle.' : 'Entrez votre facture à la question 1.');
 
-    if (!needDevice) { kRet.textContent = 'Aucun'; sRet.textContent = 'Votre téléviseur a déjà les applications : l’appareil est facultatif.'; }
+    if (!needDevice) { kRet.textContent = 'Facultatif'; sRet.textContent = 'Votre téléviseur a déjà les applications.'; }
     else if (save <= 0) { kRet.textContent = '—'; sRet.textContent = 'Pas d’économie mensuelle avec ces montants.'; }
     else {
       var months = Math.ceil(deviceTTC / save);
       kRet.textContent = months + ' mois';
       sRet.textContent = reco.court + ' à ' + ui.money(deviceTTC) + ' taxes incluses';
     }
-    badge.textContent = anyExample ? 'Estimation avec montants d’exemple' : 'Estimation avec vos montants';
+    badge.textContent = anyExample ? 'Montants d’exemple' : 'Vos montants';
+    if (liveVal) liveVal.textContent = ui.money0(Math.max(0, save)) + ' / mois';
+    announce('Économie estimée : ' + ui.money0(Math.max(0, save)) + ' par mois, ' + ui.money0(Math.max(0, save) * 12) + ' par année. Appareil conseillé : ' + reco.nom + '.');
 
     // appareil conseillé
     var key = reco.id + state.tv;
@@ -250,13 +243,17 @@
       lastRecoReady = true;
     }
 
-    // services
-    var list = document.querySelector('[data-services]');
-    list.innerHTML = CATS.filter(function (c) { return state.cats[c.id]; }).map(function (c) {
-      return '<li><span class="cat">' + ui.esc(c.nom) + '</span><span>' + ui.esc(c.services) + '</span></li>';
-    }).join('') || '<li>Aucun type d’émission choisi.</li>';
   }
   var lastRecoReady = false;
+  var srBox = document.querySelector('[data-sr-summary]');
+  var srTimer = null;
+  var srFirst = true;
+  function announce(text) {
+    if (!srBox) return;
+    if (srFirst) { srFirst = false; return; }
+    clearTimeout(srTimer);
+    srTimer = setTimeout(function () { srBox.textContent = text; }, 900);
+  }
 
   var tweens = {};
   var live = {};
@@ -268,6 +265,63 @@
     tweens[key] = gsap.to(o, { v: value, duration: 0.7, ease: 'power2.out', onUpdate: function () { live[key] = o.v; elm.textContent = ui.money0(o.v); } });
   }
 
+  var resultBox = document.getElementById('resultat');
+  var liveBar = document.querySelector('[data-live-bar]');
+  var liveVal = liveBar && liveBar.querySelector('[data-live-val]');
+  if (liveBar && 'IntersectionObserver' in window) {
+    var narrow = window.matchMedia('(max-width: 999px)');
+    var resultSeen = false;
+    var started = false;
+    var syncBar = function () {
+      var show = narrow.matches && started && !resultSeen;
+      if (show === !liveBar.hidden) return;
+      liveBar.hidden = !show;
+      document.body.classList.toggle('has-live-bar', show);
+      if (show && motion) gsap.fromTo(liveBar, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' });
+    };
+    new IntersectionObserver(function (en) { resultSeen = en[0].isIntersecting; syncBar(); }, { threshold: 0.25 }).observe(resultBox);
+    new IntersectionObserver(function (en) { if (!en[0].isIntersecting && en[0].boundingClientRect.top < 0) { started = true; syncBar(); } }, { threshold: 0 }).observe(document.querySelector('.page-hero'));
+    if (narrow.addEventListener) narrow.addEventListener('change', syncBar);
+  }
+  function showResult(e) {
+    if (e) e.preventDefault();
+    ui.scrollTo(resultBox, -100);
+    resultBox.focus({ preventScroll: true });
+    if (motion) gsap.fromTo(resultBox, { boxShadow: '0 0 0 0 rgba(255, 90, 31, 0.9)' }, { boxShadow: '0 0 0 14px rgba(255, 90, 31, 0)', duration: 1.1, ease: 'power2.out', delay: 0.3 });
+  }
+  document.querySelectorAll('[data-see-result], [data-live-bar]').forEach(function (a) { a.addEventListener('click', showResult); });
+
+  var SAVE_KEY = 'tvcq-bilan';
+  function save() {
+    ui.session.set(SAVE_KEY, JSON.stringify({ bill: state.bill, billIsExample: state.billIsExample, cats: state.cats, amounts: state.amounts, edited: state.edited, tv: state.tv, prio: state.prio, step: state.step }));
+  }
+  window.addEventListener('tvcq:save', save);
+  window.addEventListener('pagehide', save);
+  (function restore() {
+    var raw = ui.session.get(SAVE_KEY);
+    if (!raw) return;
+    try {
+      var o = JSON.parse(raw);
+      ['cats', 'amounts', 'edited'].forEach(function (k) { if (o[k]) state[k] = o[k]; });
+      state.bill = +o.bill || 0; state.billIsExample = !!o.billIsExample;
+      state.tv = o.tv === 'intelligent' ? 'intelligent' : 'simple';
+      state.prio = RECO[o.prio] ? o.prio : 'prix';
+      input.value = String(state.bill);
+      firstEntry = state.billIsExample;
+      if (!state.billIsExample) hint.textContent = 'Votre montant, taxes incluses.';
+      catsEl.querySelectorAll('[data-cat]').forEach(function (b) { b.setAttribute('aria-pressed', String(!!state.cats[b.dataset.cat])); });
+      [['[data-tv]', state.tv], ['[data-prio]', state.prio]].forEach(function (g) {
+        document.querySelectorAll(g[0] + ' [role="radio"]').forEach(function (b) {
+          var on = b.dataset.v === g[1];
+          b.setAttribute('aria-checked', String(on)); b.tabIndex = on ? 0 : -1;
+        });
+      });
+      var st = +o.step;
+      if (st >= 2 && st <= 3) setTimeout(function () { goStep(st, false); }, 0);
+    } catch (err) { /* sauvegarde illisible : on garde l'exemple */ }
+  })();
+
+  input.style.width = Math.max(1, input.value.length) + 'ch';
   renderAmounts();
   compute();
   ui.setOSD('BILAN', 'Étape 1 / 3');

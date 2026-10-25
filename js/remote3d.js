@@ -120,7 +120,7 @@ export async function createRemote(container, opts = {}) {
 
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'default' });
   } catch (e) {
     return createFallback(container);
   }
@@ -297,6 +297,7 @@ function build(container, opts, renderer, calm, variant) {
     const r = container.getBoundingClientRect();
     state.tpx = ((e.clientX - r.left) / Math.max(1, r.width)) - 0.5;
     state.tpy = ((e.clientY - r.top) / Math.max(1, r.height)) - 0.5;
+    kick(400);
     const k = opts.onKey ? pick(e) : null;
     if (k !== hovered) {
       if (hovered) hovered.material = hovered.userData.baseMat;
@@ -354,18 +355,31 @@ function build(container, opts, renderer, calm, variant) {
   io.observe(container);
 
   let raf = 0;
+  let lastDraw = 0;
+  let scrollMax = 1;
+  const measureScroll = () => { scrollMax = Math.max(1, document.documentElement.scrollHeight - window.innerHeight); };
+  measureScroll();
+  window.addEventListener('resize', measureScroll);
+  window.addEventListener('load', measureScroll);
+  if (window.ScrollTrigger) window.ScrollTrigger.addEventListener('refresh', measureScroll);
+  const onScroll = () => kick(250);
+  window.addEventListener('scroll', onScroll, { passive: true });
   let running = true;
   function frame(now) {
     if (!running) return;
     raf = requestAnimationFrame(frame);
     const animate = !calm;
     if (!inView || document.hidden) return;
-    if (!animate && now > renderUntil && !(gsap && gsap.isTweening(state))) return;
+    const busy = now < renderUntil || (gsap && gsap.isTweening(state));
+    if (!animate && !busy) return;
+    // au repos, le léger balancement n'a pas besoin de 60 images par seconde
+    if (!busy && now - lastDraw < 50) return;
+    lastDraw = now;
 
     const t = now / 1000;
     state.px += (state.tpx - state.px) * 0.06;
     state.py += (state.tpy - state.py) * 0.06;
-    const docH = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const docH = scrollMax;
     const p = Math.min(1, Math.max(0, window.scrollY / docH));
 
     const scrollTurn = variant === 'hero' ? 0 : (p - 0.5) * 1.1;
@@ -392,6 +406,7 @@ function build(container, opts, renderer, calm, variant) {
     dispose() {
       running = false; cancelAnimationFrame(raf); ro.disconnect(); io.disconnect();
       window.removeEventListener('pointermove', onMove); window.removeEventListener('click', onClick);
+      window.removeEventListener('resize', measureScroll); window.removeEventListener('scroll', onScroll);
       renderer.dispose(); renderer.domElement.remove();
     }
   };

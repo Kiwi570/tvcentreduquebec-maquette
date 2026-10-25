@@ -74,14 +74,17 @@
     var s = sectionFor(n);
     if (!s) return;
     ui.setOSD('CH ' + String(n).padStart(2, '0'), s.dataset.label);
-    if (remote) {
-      remote.press('ch:' + n);
-      remote.setAway(s.dataset.remote === 'hide');
-    }
-    if (rail) {
-      rail.classList.toggle('is-dark', s.classList.contains('dark'));
-      rail.classList.toggle('is-away', s.dataset.remote === 'hide');
-    }
+    if (remote) remote.press('ch:' + n);
+    if (rail) rail.classList.toggle('is-dark', s.classList.contains('dark'));
+  }
+
+  // la télécommande s'écarte devant les sections larges (galerie, guide)
+  var away = false;
+  function setAway(v) {
+    if (v === away) return;
+    away = v;
+    if (remote) remote.setAway(v);
+    if (rail) rail.classList.toggle('is-away', v);
   }
 
   function onKey(action) {
@@ -95,27 +98,32 @@
     else if (action === 'menu') ui.openCart();
   }
 
-  // repérage de la chaîne courante
-  if (motion) {
-    sections.forEach(function (s) {
-      ST.create({
-        trigger: s, start: 'top 55%', end: 'bottom 55%', refreshPriority: -1,
-        onToggle: function (self) { if (self.isActive) setChannel(+s.dataset.channel); }
+  // repérage de la chaîne courante : appelé à la fin, une fois les sections épinglées en place
+  function trackChannels() {
+    if (motion) {
+      sections.forEach(function (s) {
+        var t = s.parentElement && s.parentElement.classList.contains('pin-spacer') ? s.parentElement : s;
+        ST.create({ trigger: t, start: 'top 55%', end: 'bottom 55%', onToggle: function (self) { if (self.isActive) setChannel(+s.dataset.channel); } });
+        if (s.dataset.remote === 'hide') {
+          ST.create({ trigger: t, start: 'top 78%', end: 'bottom 22%', onToggle: function (self) { setAway(self.isActive); } });
+        }
       });
-    });
-  } else if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) setChannel(+en.target.dataset.channel); });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    sections.forEach(function (s) { io.observe(s); });
+    } else if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { if (en.isIntersecting) setChannel(+en.target.dataset.channel); });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      sections.forEach(function (s) { io.observe(s); });
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { setAway(en.isIntersecting); });
+      }, { rootMargin: '-22% 0px -22% 0px' });
+      sections.forEach(function (s) { if (s.dataset.remote === 'hide') io2.observe(s); });
+    }
   }
   setChannel(1);
 
-  // clavier : 1 à 7
+  // clavier : 1 à 8
   document.addEventListener('keydown', function (e) {
-    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
-    var t = e.target;
-    if (t && t.closest && t.closest('input, textarea, select, [contenteditable], .cart')) return;
+    if (!ui.shortcutsAllowed(e)) return;
     if (/^[1-9]$/.test(e.key)) {
       var n = +e.key;
       if (remote) remote.press('ch:' + n);
@@ -158,8 +166,7 @@
       remote = r;
       if (!r) return;
       gsap.delayedCall(firstVisit ? 0.15 : 0, function () { r.powerOn(); });
-      var s = sectionFor(current || 1);
-      if (s) r.setAway(s.dataset.remote === 'hide');
+      if (away) r.setAway(true);
     });
     gsap.to(heroBits, { y: 0, opacity: 1, duration: 1, stagger: 0.09, ease: 'power3.out', delay: screenDelay + (firstVisit ? 1.0 : 0.6) });
   } else {
@@ -214,6 +221,16 @@
         onUpdate: function (self) { if (prog) gsap.set(prog, { scaleX: self.progress }); }
       }
     });
+    track.addEventListener('focusin', function (e) {
+      var card = e.target.closest('.device-card, .device-end');
+      var st = hTween.scrollTrigger;
+      var d = dist();
+      if (!card || !st || !d) return;
+      var p = Math.min(1, Math.max(0, (card.offsetLeft - 24) / d));
+      var y = st.start + (st.end - st.start) * p;
+      if (ui.lenis) ui.lenis.scrollTo(y, { immediate: true, force: true });
+      else window.scrollTo(0, y);
+    });
     track.querySelectorAll('.device-card').forEach(function (card) {
       ST.create({ trigger: card, containerAnimation: hTween, start: 'left 80%', onEnter: function () { scrambleCard(card); } });
       var img = card.querySelector('img');
@@ -223,7 +240,12 @@
       });
     });
   } else if (track) {
-    if (prog) prog.parentElement.hidden = true;
+    var updateProg = function () {
+      var m = track.scrollWidth - track.clientWidth;
+      if (prog) prog.style.transform = 'scaleX(' + (m > 0 ? track.scrollLeft / m : 1).toFixed(3) + ')';
+    };
+    track.addEventListener('scroll', updateProg, { passive: true });
+    updateProg();
     var cio = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) scrambleCard(en.target); });
     }, { threshold: 0.6 }) : null;
@@ -266,42 +288,48 @@
     steps.forEach(function (s) { s.classList.add('is-on'); });
   }
 
-  /* ---------- CH 05 : guide des solutions légales ---------- */
-  var guide = document.querySelector('.ch-guide');
-  var epgScroll = guide && guide.querySelector('.epg-scroll');
-  var epg = guide && guide.querySelector('.epg');
-  var head = guide && guide.querySelector('.epg-playhead');
-  function updateLive(x) {
-    if (!epg) return;
-    epg.querySelectorAll('.epg-cell').forEach(function (c) {
-      var l = c.offsetLeft, r = l + c.offsetWidth;
-      c.classList.toggle('is-live', x >= l && x <= r);
-    });
+  /* ---------- CH 05 : guide, balayage du gratuit vers l'abonnement ---------- */
+  var grid = document.querySelector('[data-guide]');
+  var sweep = grid && grid.querySelector('.gg-sweep');
+  var sweepLabel = sweep && sweep.querySelector('.gg-sweep-label');
+  var colNames = ['Gratuit', 'Application', 'Abonnement'];
+  var liveCol = -1;
+  function setLiveCol(c) {
+    if (c === liveCol) return;
+    liveCol = c;
+    grid.querySelectorAll('[data-col]').forEach(function (el) { el.classList.toggle('is-live', +el.dataset.col === c); });
+    if (sweepLabel) sweepLabel.textContent = colNames[c] || '';
   }
-  if (guide && epg && head) {
-    var headCol = function () { return epg.querySelector('.epg-row-head').offsetWidth + 6; };
-    if (pinOK) {
-      guide.classList.add('is-pinned');
-      var maxScroll = function () { return Math.max(0, epg.scrollWidth - epgScroll.clientWidth); };
-      var playTo = function () { return epg.scrollWidth - 4; };
+  if (grid && sweep && window.matchMedia('(min-width: 900px)').matches) {
+    var cols = grid.querySelectorAll('.gg-col');
+    var G = null;
+    var measure = function () {
+      var g = grid.getBoundingClientRect();
+      var first = cols[0].getBoundingClientRect();
+      var last = cols[cols.length - 1].getBoundingClientRect();
+      G = {
+        x0: first.left - g.left + 1, x1: last.right - g.left - 3,
+        ends: Array.prototype.map.call(cols, function (c) { return c.getBoundingClientRect().right - g.left; })
+      };
+    };
+    var place = function (p) {
+      if (!G) measure();
+      var x = G.x0 + (G.x1 - G.x0) * p;
+      sweep.style.setProperty('--sweep-x', x.toFixed(1) + 'px');
+      if (sweepLabel) sweepLabel.style.transform = p > 0.82 ? 'translateX(calc(-100% + 4px))' : '';
+      setLiveCol(x < G.ends[0] ? 0 : x < G.ends[1] ? 1 : 2);
+    };
+    window.addEventListener('resize', function () { G = null; });
+    if (motion) {
       var gp = { p: 0 };
       gsap.to(gp, {
         p: 1, ease: 'none',
-        scrollTrigger: {
-          trigger: guide, start: 'top top', end: function () { return '+=' + Math.max(700, maxScroll() * 2.2); },
-          pin: true, scrub: 0.7, invalidateOnRefresh: true, anticipatePin: 1
-        },
-        onUpdate: function () {
-          epgScroll.scrollLeft = maxScroll() * gp.p;
-          var x = headCol() + (playTo() - headCol()) * gp.p;
-          head.style.left = x + 'px';
-          updateLive(x);
-        }
+        scrollTrigger: { trigger: grid, start: 'top 72%', end: 'bottom 38%', scrub: 0.6, onRefresh: function () { G = null; } },
+        onUpdate: function () { place(gp.p); }
       });
+      place(0);
     } else {
-      var x0 = headCol() + 30;
-      head.style.left = x0 + 'px';
-      updateLive(x0);
+      place(0.04);
     }
   }
 
@@ -335,7 +363,16 @@
     }
   }
 
-  /* ---------- CH 07 : formulaire de rappel simulé ---------- */
+  /* ---------- CH 07 : questions ---------- */
+  document.querySelectorAll('.faq-item').forEach(function (d) {
+    d.addEventListener('toggle', function () {
+      if (!d.open) return;
+      if (remote) remote.press('ok');
+      if (motion) gsap.from(d.querySelector('.a'), { y: -10, opacity: 0, duration: 0.45, ease: 'power2.out' });
+    });
+  });
+
+  /* ---------- CH 08 : formulaire de rappel simulé ---------- */
   var form = document.getElementById('form-rappel');
   if (form) {
     form.addEventListener('submit', function (e) {
@@ -362,11 +399,24 @@
       form.reset();
       document.getElementById('form-done').hidden = true;
       form.hidden = false;
+      form.querySelector('#f-prenom').focus();
     });
   }
 
+  trackChannels();
   ui.boot();
-  if (motion) {
-    window.addEventListener('load', function () { ST.refresh(); });
+
+  var hashTarget = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  function jumpToHash() {
+    if (!hashTarget) return;
+    if (ui.lenis) ui.lenis.resize(); // la page a grandi avec les sections épinglées
+    var y = hashTarget.getBoundingClientRect().top + window.scrollY - 20;
+    if (ui.lenis) ui.lenis.scrollTo(y, { immediate: true, force: true });
+    else window.scrollTo(0, y);
   }
+  window.addEventListener('load', function () {
+    if (motion) ST.refresh();
+    setTimeout(jumpToHash, 60);
+    setTimeout(jumpToHash, 700); // après le découpage des titres et le recalcul final
+  });
 })();

@@ -36,16 +36,71 @@
     }).join('');
   }
 
+  /* Position de l'appareil parmi les cinq : prix et stockage, un point par appareil */
+  function rangeChart(a) {
+    var W = 520, L = 96, R = 500;
+    var rows = [
+      { key: 'prix', label: 'Prix', min: 150, max: 375, ticks: [200, 250, 300, 350], fmt: function (v) { return v + ' $'; }, val: function (x) { return x.prix; } },
+      { key: 'stock', label: 'Stockage', min: 0, max: 34, ticks: [8, 16, 32], fmt: function (v) { return v + ' Go'; }, val: function (x) { return x.specs.stockageGo; } }
+    ];
+    var rowH = 92, top = 34;
+    var byPrice = list.slice().sort(function (p, q) { return p.prix - q.prix; });
+    var lo = byPrice[0], hi = byPrice[byPrice.length - 1];
+    var stocks = list.map(function (x) { return x.specs.stockageGo; });
+    var loS = Math.min.apply(null, stocks), hiS = Math.max.apply(null, stocks);
+    var H = top + rows.length * rowH;
+    var out = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + ui.esc(a.court) + ' : ' + ui.money0(a.prix) + ' et ' + a.specs.stockageGo + ' Go de stockage, parmi les cinq appareils de ' + ui.money0(lo.prix) + ' à ' + ui.money0(hi.prix) + ' et de ' + loS + ' à ' + hiS + ' Go.">';
+    rows.forEach(function (r, ri) {
+      var y = top + ri * rowH + 40;
+      var sx = function (v) { return L + (v - r.min) / (r.max - r.min) * (R - L); };
+      out += '<text x="0" y="' + (y + 4) + '" class="rc-lab">' + r.label + '</text>';
+      out += '<line x1="' + L + '" x2="' + R + '" y1="' + y + '" y2="' + y + '" class="rc-axis"/>';
+      r.ticks.forEach(function (t) {
+        out += '<line x1="' + sx(t) + '" x2="' + sx(t) + '" y1="' + (y + 4) + '" y2="' + (y + 9) + '" class="rc-tick"/>' +
+          '<text x="' + sx(t) + '" y="' + (y + 24) + '" text-anchor="middle" class="rc-tickl">' + r.fmt(t) + '</text>';
+      });
+      // empiler les appareils de même valeur
+      // l'appareil affiché passe en haut de sa pile, pour que son étiquette reste lisible
+      var seen = {};
+      var ordered = list.filter(function (x) { return x !== a; }).concat([a]);
+      var pts = ordered.map(function (x) {
+        var v = r.val(x);
+        var k = seen[v] = (seen[v] || 0) + 1;
+        return { x: x, v: v, cx: sx(v), cy: y - (k - 1) * 15 };
+      });
+      pts.forEach(function (p) {
+        var cur = p.x === a;
+        out += '<g class="rc-dot' + (cur ? ' is-cur' : '') + '" tabindex="0" data-tip="' + ui.esc(p.x.court + ' · ' + r.fmt(p.v)) + '">' +
+          '<circle cx="' + p.cx + '" cy="' + p.cy + '" r="13" class="rc-hit"/>' +
+          '<circle cx="' + p.cx + '" cy="' + p.cy + '" r="' + (cur ? 8 : 6) + '" class="rc-mark"/></g>';
+        if (cur) out += '<text x="' + p.cx + '" y="' + (p.cy - 16) + '" text-anchor="middle" class="rc-val">' + r.fmt(p.v) + '</text>';
+      });
+    });
+    out += '</svg><div class="rc-tip" hidden></div>' +
+      '<p class="rc-key"><span class="sw cur"></span>' + ui.esc(a.court) + '<span class="sw"></span>Les quatre autres appareils</p>';
+    return out;
+  }
+
+  function bindTips(box) {
+    var tip = box.querySelector('.rc-tip');
+    function show(g) {
+      var r = g.getBoundingClientRect(), b = box.getBoundingClientRect();
+      tip.textContent = g.dataset.tip;
+      tip.hidden = false;
+      tip.style.left = (r.left + r.width / 2 - b.left) + 'px';
+      tip.style.top = (r.top - b.top - 8) + 'px';
+    }
+    box.querySelectorAll('.rc-dot').forEach(function (g) {
+      g.addEventListener('pointerenter', function () { show(g); });
+      g.addEventListener('focus', function () { show(g); });
+      g.addEventListener('pointerleave', function () { tip.hidden = true; });
+      g.addEventListener('blur', function () { tip.hidden = true; });
+    });
+  }
+
   function blueprint(a) {
     var d = a.specs.dimensions;
-    if (!d) {
-      return '<span class="label">' + ui.esc(a.court) + ' · vue de dessus</span>' +
-        '<svg viewBox="0 0 460 300" role="img" aria-label="Dimensions à compléter">' +
-        '<rect class="bp" x="80" y="50" width="300" height="200" rx="18" fill="none" stroke="#cfe0ff" stroke-width="1.5" stroke-dasharray="7 7"/>' +
-        '<text x="230" y="146" text-anchor="middle" fill="#cfe0ff" font-family="Geist Mono, monospace" font-size="15">Dimensions</text>' +
-        '<text x="230" y="170" text-anchor="middle" fill="#ff9a72" font-family="Geist Mono, monospace" font-size="13">à compléter</text></svg>' +
-        '<p style="font-size:.85rem;color:#9fb6dc">Le site actuel ne donne pas les dimensions de cet appareil.</p>';
-    }
+    if (!d) return '';
     var k = 3.2, x0 = 50, y0 = 52;
     var L = d.longueur * k, W = d.largeur * k, T = d.epaisseur * k;
     var yS = y0 + W + 46;
@@ -109,9 +164,16 @@
 
     var table = document.querySelector('[data-specs]');
     table.innerHTML = '<caption class="sr-only">Caractéristiques de ' + ui.esc(a.nom) + '</caption><tbody>' + specRows(a) + '</tbody>';
+    document.querySelector('[data-specs-title]').textContent = a.court + ' en détail';
+    var range = document.querySelector('[data-range]');
+    range.innerHTML = rangeChart(a);
+    bindTips(range);
     var bp = document.querySelector('[data-blueprint]');
-    bp.innerHTML = blueprint(a);
-    drawIn(table, bp);
+    var bpHtml = blueprint(a);
+    bp.innerHTML = bpHtml;
+    bp.hidden = !bpHtml;
+    document.querySelector('[data-bp-label]').hidden = !bpHtml;
+    drawIn(table, bp, range);
 
     document.querySelector('[data-others]').innerHTML = list.filter(function (x) { return x !== a; }).map(function (x) {
       return '<a class="mini-card" href="appareil.html#' + x.id + '"><span class="ph"><img src="' + D.src(x) + '" alt="" loading="lazy" width="' + x.img.w[0] + '" height="' + Math.round(x.img.w[0] / x.img.ratio) + '"></span>' +
@@ -121,16 +183,20 @@
   }
 
   var drawn = false;
-  function drawIn(table, bp) {
+  function drawIn(table, bp, range) {
     if (!motion || !window.ScrollTrigger) return;
     var run = function () {
       if (window.DrawSVGPlugin) gsap.from(bp.querySelectorAll('.bp'), { drawSVG: '0%', duration: 1.4, stagger: 0.12, ease: 'power2.inOut' });
+      if (range) {
+        if (window.DrawSVGPlugin) gsap.from(range.querySelectorAll('.rc-axis'), { drawSVG: '0%', duration: 0.9, stagger: 0.15, ease: 'power2.inOut' });
+        gsap.from(range.querySelectorAll('.rc-mark'), { attr: { r: 0 }, duration: 0.6, stagger: 0.05, delay: 0.4, ease: 'back.out(2)' });
+      }
       if (window.ScrambleTextPlugin) table.querySelectorAll('[data-scr]').forEach(function (s, i) {
         gsap.to(s, { duration: 0.8, delay: i * 0.04, scrambleText: { text: s.dataset.scr, chars: 'ABCDEFGHJKLMNPRSTUVXYZ0123456789', speed: 0.7, revealDelay: 0.2 } });
       });
     };
     if (drawn) { run(); return; }
-    window.ScrollTrigger.create({ trigger: bp, start: 'top 85%', once: true, onEnter: function () { drawn = true; run(); } });
+    window.ScrollTrigger.create({ trigger: range || bp, start: 'top 85%', once: true, onEnter: function () { drawn = true; run(); } });
   }
 
   /* Quantité */
@@ -171,8 +237,11 @@
   }
 
   window.addEventListener('hashchange', function () {
-    render(idFromHash(), true);
+    var h = decodeURIComponent((location.hash || '').slice(1));
+    if (!D.parId(h)) return; // ancre interne (ex. lien d'évitement) : on garde l'appareil affiché
+    render(h, true);
     ui.scrollTo(document.getElementById('produit'), 0);
+    ui.focusTarget(document.querySelector('[data-p-name]'));
   });
   render(idFromHash(), false);
   if (motion) {

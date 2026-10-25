@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pas de signal · Tv-Centre du Québec</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1c1d22">
+<link rel="icon" href="/img/favicon-64.png" sizes="64x64" type="image/png">
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  body { background: var(--graphite); color: var(--on-dark); min-height: 100svh; display: grid; }
+  .nosignal { display: grid; place-items: center; padding-block: 48px; }
+  .screen {
+    position: relative; width: min(100%, 760px); aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden;
+    box-shadow: 0 0 0 12px #0d0d10, 0 40px 120px -30px rgba(255, 90, 31, 0.35);
+    background: linear-gradient(90deg, #c0c0c0 0 14.28%, #c0c000 0 28.57%, #00c0c0 0 42.85%, #00c000 0 57.14%, #c000c0 0 71.42%, #c00000 0 85.71%, #0000c0 0);
+  }
+  .screen::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 26%;
+    background: linear-gradient(90deg, #0000c0 0 14.28%, #131313 0 28.57%, #c000c0 0 42.85%, #131313 0 57.14%, #00c0c0 0 71.42%, #131313 0 85.71%, #c0c0c0 0); }
+  .screen::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 3px); }
+  .osd-box {
+    position: absolute; z-index: 1; left: 50%; top: 42%; transform: translate(-50%, -50%);
+    display: grid; gap: 6px; justify-items: center; text-align: center;
+    padding: 18px 26px; border-radius: 12px; background: rgba(12, 12, 15, 0.9); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    font-family: var(--mono); letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .osd-box strong { font-size: clamp(1rem, 3vw, 1.6rem); color: var(--signal); }
+  .osd-box span { font-size: 0.72rem; color: var(--on-dark-muted); }
+  .copy { display: grid; gap: 18px; justify-items: center; text-align: center; margin-top: 44px; }
+  .copy h1 { font-size: clamp(2rem, 5vw, 3.6rem); letter-spacing: -0.045em; }
+  .copy p { color: var(--on-dark-muted); max-width: 44ch; }
+  .copy .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+</style>
+</head>
+<body class="dark">
+<main class="nosignal wrap">
+  <div style="width:100%;display:grid;justify-items:center">
+    <div class="screen" role="img" aria-label="Mire de télévision avec le message Pas de signal">
+      <div class="osd-box"><strong>Pas de signal</strong><span>Erreur 404 · HDMI 1</span></div>
+    </div>
+    <div class="copy">
+      <h1>Cette page n’existe pas.</h1>
+      <p>Le lien est peut-être incomplet, ou la page a changé d’adresse. Revenez à l’accueil ou faites votre bilan télé.</p>
+      <div class="row">
+        <a class="btn btn--signal" href="/">Revenir à l’accueil <span class="arrow">→</span></a>
+        <a class="btn btn--ghost" href="/bilan.html">Faire mon bilan télé</a>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>
