@@ -130,7 +130,7 @@ export async function createRemote(container, opts = {}) {
   try {
     return build(container, opts, renderer, calm, variant);
   } catch (err) {
-    if (window.console) console.warn('Télécommande 3D : version SVG affichée.', err);
+    if (window.console) console.warn('Télécommande 3D : version SVG affichée.', err);
     try { renderer.dispose(); renderer.domElement.remove(); } catch (e) { /* rien */ }
     return createFallback(container);
   }

@@ -11,12 +11,12 @@
     { id: 'nouvelles', nom: 'Nouvelles et télé générale', ex: 0, services: 'Antenne numérique (gratuit selon votre secteur), ICI TOU.TV, TVA+, Noovo.ca' },
     { id: 'series', nom: 'Séries', ex: 20, services: 'Crave, Club illico, Netflix' },
     { id: 'films', nom: 'Films', ex: 15, services: 'Netflix, Prime Video, Crave' },
-    { id: 'sport', nom: 'Sport', ex: 20, services: 'RDS sur Prime Video (annonce de Bell, 2024) ; autres sports à compléter' },
+    { id: 'sport', nom: 'Sport', ex: 20, services: 'RDS sur Prime Video (annonce de Bell, 2024) ; autres sports à compléter' },
     { id: 'jeunesse', nom: 'Jeunesse', ex: 12, services: 'ICI TOU.TV, Disney+, Netflix' }
   ];
   var RECO = {
     prix: { id: 'onn-4k', why: 'Le moins cher des cinq, avec Google TV et la 4K.' },
-    compact: { id: 'formuler-z-mini', why: 'Le plus petit : 83 × 60 × 12,5 mm, 5 W au maximum.' },
+    compact: { id: 'formuler-z-mini', why: 'Le plus petit : 83 × 60 × 12,5 mm, 5 W au maximum.' },
     filaire: { id: 'formuler-z10', why: 'Port Ethernet pour brancher l’appareil directement au modem.' },
     stockage: { id: 'formuler-z11-pro-max', why: '32 Go de stockage et un port Ethernet.' }
   };
@@ -221,7 +221,7 @@
     }
     badge.textContent = anyExample ? 'Montants d’exemple' : 'Vos montants';
     if (liveVal) liveVal.textContent = ui.money0(Math.max(0, save)) + ' / mois';
-    announce('Économie estimée : ' + ui.money0(Math.max(0, save)) + ' par mois, ' + ui.money0(Math.max(0, save) * 12) + ' par année. Appareil conseillé : ' + reco.nom + '.');
+    announce('Économie estimée : ' + ui.money0(Math.max(0, save)) + ' par mois, ' + ui.money0(Math.max(0, save) * 12) + ' par année. Appareil conseillé : ' + reco.nom + '.');
 
     // appareil conseillé
     var key = reco.id + state.tv;

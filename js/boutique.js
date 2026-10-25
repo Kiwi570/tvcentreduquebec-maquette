@@ -136,7 +136,7 @@
         '<p class="muted" style="font-size:.92rem">' + ui.esc(a.accroche) + '</p>' +
         '<div class="facts">' + fact(a.specs.systeme) + fact(a.specs.stockage) + fact(a.specs.video) + '</div>' +
         '<div class="actions"><button class="btn btn--signal btn--sm" type="button" data-add="' + a.id + '">Ajouter au panier</button>' +
-        '<a class="btn btn--ghost btn--sm" href="appareil.html#' + a.id + '" aria-label="Voir la fiche : ' + ui.esc(a.nom) + '">Fiche</a></div>' +
+        '<a class="btn btn--ghost btn--sm" href="appareil.html#' + a.id + '" aria-label="Voir la fiche : ' + ui.esc(a.nom) + '">Fiche</a></div>' +
       '</div></article>';
   }
   function renderGrid(animate) {

@@ -44,7 +44,7 @@ window.TVCQ = {
       court: 'Z Mini',
       prix: 200,
       img: { base: 'img/appareils/formuler-z-mini', w: [474], ratio: 474 / 419 },
-      accroche: 'Le plus compact : 83 mm de long, 5 W au maximum.',
+      accroche: 'Le plus compact : 83 mm de long, 5 W au maximum.',
       specs: {
         systeme: 'Android 12',
         memoire: '2 Go LPDDR4',
@@ -110,7 +110,7 @@ window.TVCQ = {
       court: 'Z11 Pro Max',
       prix: 350,
       img: { base: 'img/appareils/formuler-z11-pro-max', w: [480, 896], ratio: 896 / 910 },
-      accroche: 'Le plus complet : 32 Go, Ethernet et son ambiophonique.',
+      accroche: 'Le plus complet : 32 Go, Ethernet et son ambiophonique.',
       specs: {
         systeme: 'Android 11',
         memoire: null,

@@ -4,29 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Boutique · Tv-Centre du Québec</title>
-<meta name="description" content="Cinq appareils 4K ONN et Formuler, de 180 à 350 $, avec configuration à distance.">
+<meta name="description" content="Cinq appareils 4K ONN et Formuler, de 180 à 350&nbsp;$, avec configuration à distance.">
 <meta name="theme-color" content="#1c1d22">
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_CA">
 <meta property="og:site_name" content="Tv-Centre du Québec">
 <meta property="og:title" content="Boutique · Tv-Centre du Québec">
-<meta property="og:description" content="Cinq appareils 4K ONN et Formuler, de 180 à 350 $, avec configuration à distance.">
+<meta property="og:description" content="Cinq appareils 4K ONN et Formuler, de 180 à 350&nbsp;$, avec configuration à distance.">
 <meta property="og:image" content="https://tvcentreduquebec-maquette.vercel.app/img/partage.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="img/favicon-64.png" sizes="64x64" type="image/png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-<link rel="preload" href="fonts/geist.woff" as="font" type="font/woff" crossorigin>
-<link rel="preload" href="fonts/geist-mono.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <a class="skip" href="#catalogue">Aller au catalogue</a>
 
 <header class="site-header">
-  <a class="brand" href="index.html" aria-label="Tv-Centre du Québec, accueil">
+  <a class="brand" href="index.html">
     <span class="brand-chip"><img src="img/logo-icone.webp" alt="" width="30" height="35"></span>
     <span class="brand-text"><span class="brand-name">Tv‑Centre du Québec</span><span class="brand-sub">Appareils · configuration</span></span>
   </a>
@@ -37,15 +37,15 @@
     <a href="index.html#contact">Contact</a>
   </nav>
   <div class="header-actions">
-    <button class="calm-toggle" type="button" data-calm-toggle aria-pressed="false" aria-label="Mode calme : réduire les animations" title="Réduire les animations"><span class="sw" aria-hidden="true"></span><span class="txt-long">Mode calme</span><span class="txt-short">Calme</span></button>
-    <button class="cart-btn" type="button" data-cart-open aria-label="Ouvrir le panier">
+    <button class="calm-toggle" type="button" data-calm-toggle aria-pressed="false" aria-label="Mode calme&nbsp;: réduire les animations" title="Réduire les animations"><span class="sw" aria-hidden="true"></span><span class="txt-long">Mode calme</span><span class="txt-short">Calme</span></button>
+    <button class="cart-btn" type="button" data-cart-open>
       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 6h12l-1 11H5L4 6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M7 6V5a3 3 0 0 1 6 0v1" stroke="currentColor" stroke-width="1.7"/></svg>
-      <span class="txt">Panier</span><span class="cart-count" data-cart-count>0</span>
+      <span class="txt">Panier</span><span class="sr-only" data-cart-sr></span><span class="cart-count" data-cart-count aria-hidden="true">0</span>
     </button>
     <button class="menu-btn" type="button" data-menu aria-expanded="false" aria-controls="mobile-nav">Menu</button>
   </div>
 </header>
-<nav class="mobile-nav" id="mobile-nav" aria-label="Navigation mobile" hidden>
+<nav class="mobile-nav" id="mobile-nav" data-lenis-prevent aria-label="Navigation mobile" hidden>
   <a href="index.html">Accueil <span class="label">CH 01</span></a>
   <a href="bilan.html">Bilan télé <span class="label">3 questions</span></a>
   <a href="boutique.html">Boutique <span class="label">5 appareils</span></a>
@@ -77,7 +77,7 @@
             <div class="dpad" role="group" aria-label="Croix directionnelle">
               <button class="up" type="button" data-dir="-1" tabindex="-1" aria-hidden="true">▲</button>
               <button class="left" type="button" data-dir="-1" aria-label="Appareil précédent">◀</button>
-              <button class="ok" type="button" data-sp-ok aria-label="Ajouter au panier">OK</button>
+              <button class="ok" type="button" data-sp-ok aria-label="OK, ajouter au panier">OK</button>
               <button class="right" type="button" data-dir="1" aria-label="Appareil suivant">▶</button>
               <button class="down" type="button" data-dir="1" tabindex="-1" aria-hidden="true">▼</button>
             </div>
@@ -100,7 +100,7 @@
       <div class="filter-price">
         <label class="label" for="f-prix">Prix maximum</label>
         <input class="range" type="range" id="f-prix" min="180" max="350" step="5" value="350">
-        <div class="row"><span>180 $</span><span data-prix-out>350 $</span></div>
+        <div class="row"><span>180&nbsp;$</span><span data-prix-out>350&nbsp;$</span></div>
       </div>
       <div class="field"><label for="f-stock">Stockage</label>
         <select id="f-stock"><option value="0">Tous</option><option value="8">8 Go et plus</option><option value="16">16 Go et plus</option><option value="32">32 Go</option></select></div>
@@ -110,7 +110,7 @@
       <span class="count" data-count aria-live="polite"></span>
     </form>
     <div class="grid-devices" data-grid></div>
-    <p class="muted" style="font-size:.85rem">Prix du site actuel, taxes en sus : TPS 5 % et TVQ 9,975 % calculées au panier <span class="todo">à confirmer</span></p>
+    <p class="muted" style="font-size:.85rem">Prix du site actuel, taxes en sus&nbsp;: TPS 5&nbsp;% et TVQ 9,975&nbsp;% calculées au panier <span class="todo">à confirmer</span></p>
 
     <div style="display:grid;gap:10px;margin-top:30px"><span class="label muted">Comparateur</span><h2 class="h2" data-split>Côte à côte</h2></div>
     <div class="compare-wrap" role="region" tabindex="0" aria-label="Tableau comparatif des cinq appareils">
@@ -120,7 +120,7 @@
     <div class="perks" data-reveal-stagger>
       <div class="perk"><span class="label muted-dark">Service</span><h3>Configuration à distance</h3><p>L’appareil est configuré à distance avec les applications officielles. <span class="todo">conditions à compléter</span></p></div>
       <div class="perk"><span class="label muted-dark">Paiement</span><h3>Interac ou carte de crédit</h3><p>Virement Interac, ou carte de crédit avec un lien envoyé par courriel.</p></div>
-      <div class="perk"><span class="label muted-dark">Fidélité</span><h3>5 à 15 points par article</h3><p>20 points à l’inscription, et 100 points valent 10 $ de réduction.</p></div>
+      <div class="perk"><span class="label muted-dark">Fidélité</span><h3>5 à 15 points par article</h3><p>20 points à l’inscription, et 100 points valent 10&nbsp;$ de réduction.</p></div>
     </div>
   </section>
 </main>
@@ -130,9 +130,9 @@
     <div class="footer-grid">
       <div style="display:grid;gap:12px;align-content:start"><span class="brand-name">Tv-Centre du Québec</span><p>Appareils 4K, configuration à distance et solutions légales pour regarder la télé sans le câble.</p></div>
       <nav aria-label="Pied de page"><span class="label">Pages</span><a href="index.html">Accueil</a><a href="bilan.html">Bilan télé</a><a href="boutique.html">Boutique</a><a href="index.html#contact">Contact</a></nav>
-      <div style="display:grid;gap:8px;align-content:start"><span class="label">Raccourcis</span><span>Flèches gauche et droite : changer d’appareil</span><span>Mode calme : moins d’animations</span></div>
+      <div style="display:grid;gap:8px;align-content:start"><span class="label">Raccourcis</span><span>Flèches gauche et droite&nbsp;: changer d’appareil</span><span>Mode calme&nbsp;: moins d’animations</span></div>
     </div>
-    <div class="footer-note"><span>Maquette de présentation, octobre 2026. Panier et paiement simulés.</span><span>Mentions légales, livraison et retours : <span class="todo">à compléter</span></span></div>
+    <div class="footer-note"><span>Maquette de présentation, octobre 2026. Panier et paiement simulés.</span><span>Mentions légales, livraison et retours&nbsp;: <span class="todo">à compléter</span></span></div>
   </div>
 </footer>
 

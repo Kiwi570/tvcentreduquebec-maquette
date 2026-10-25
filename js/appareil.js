@@ -15,7 +15,7 @@
   var current = null;
 
   function idFromHash() {
-    var h = decodeURIComponent((location.hash || '').slice(1));
+    var h = ''; try { h = decodeURIComponent((location.hash || '').slice(1)); } catch (e) { /* ancre invalide */ }
     return D.parId(h) ? h : list[0].id;
   }
 
@@ -49,7 +49,7 @@
     var stocks = list.map(function (x) { return x.specs.stockageGo; });
     var loS = Math.min.apply(null, stocks), hiS = Math.max.apply(null, stocks);
     var H = top + rows.length * rowH;
-    var out = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + ui.esc(a.court) + ' : ' + ui.money0(a.prix) + ' et ' + a.specs.stockageGo + ' Go de stockage, parmi les cinq appareils de ' + ui.money0(lo.prix) + ' à ' + ui.money0(hi.prix) + ' et de ' + loS + ' à ' + hiS + ' Go.">';
+    var out = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + ui.esc(a.court) + ' : ' + ui.money0(a.prix) + ' et ' + a.specs.stockageGo + ' Go de stockage, parmi les cinq appareils de ' + ui.money0(lo.prix) + ' à ' + ui.money0(hi.prix) + ' et de ' + loS + ' à ' + hiS + ' Go.">';
     rows.forEach(function (r, ri) {
       var y = top + ri * rowH + 40;
       var sx = function (v) { return L + (v - r.min) / (r.max - r.min) * (R - L); };
@@ -110,7 +110,7 @@
         '<text x="' + lx + '" y="' + ly + '" text-anchor="' + (anchor || 'middle') + '" fill="#ffd2bf" font-family="Geist Mono, monospace" font-size="14" font-weight="600">' + label + '</text>';
     }
     return '<span class="label">' + ui.esc(a.court) + ' · vues de dessus et de côté, à l’échelle</span>' +
-      '<svg viewBox="0 0 460 ' + (yS + T + 40) + '" role="img" aria-label="Plan coté : ' + d.longueur + ' millimètres de long, ' + d.largeur + ' de large, ' + ep + ' d’épaisseur">' +
+      '<svg viewBox="0 0 460 ' + (yS + T + 40) + '" role="img" aria-label="Plan coté : ' + d.longueur + ' millimètres de long, ' + d.largeur + ' de large, ' + ep + ' d’épaisseur">' +
       '<defs><marker id="ar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="#ff9a72"/></marker></defs>' +
       '<rect class="bp" x="' + x0 + '" y="' + y0 + '" width="' + L + '" height="' + W + '" rx="14" fill="rgba(207,224,255,.06)" stroke="#cfe0ff" stroke-width="1.6"/>' +
       '<rect class="bp" x="' + (x0 + 14) + '" y="' + (y0 + 14) + '" width="' + (L - 28) + '" height="' + (W - 28) + '" rx="8" fill="none" stroke="#cfe0ff" stroke-opacity=".35" stroke-width="1"/>' +
@@ -140,10 +140,10 @@
     document.querySelector('[data-p-add]').dataset.add = a.id;
     var lvl = D.fidelite.niveaux;
     document.querySelector('[data-p-facts]').innerHTML =
-      '<div>Garantie : ' + (a.specs.garantie ? ui.esc(a.specs.garantie) : '<span class="todo">à compléter</span>') + '</div>' +
-      '<div>Configuration à distance : <span class="todo">conditions à compléter</span></div>' +
-      '<div>Fidélité : ' + lvl[0].parArticle + ' points par article au niveau Basique, ' + lvl[2].parArticle + ' au niveau Or</div>' +
-      '<div>Paiement : virement Interac ou carte de crédit</div>';
+      '<div>Garantie : ' + (a.specs.garantie ? ui.esc(a.specs.garantie) : '<span class="todo">à compléter</span>') + '</div>' +
+      '<div>Configuration à distance : <span class="todo">conditions à compléter</span></div>' +
+      '<div>Fidélité : ' + lvl[0].parArticle + ' points par article au niveau Basique, ' + lvl[2].parArticle + ' au niveau Or</div>' +
+      '<div>Paiement : virement Interac ou carte de crédit</div>';
     qtyOut.textContent = '1';
 
     var swap = function () {

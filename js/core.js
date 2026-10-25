@@ -259,6 +259,14 @@
   function cleanPath(p) { return p.replace(/\.html$/, '').replace(/\/index$/, '/').replace(/\/$/, '') || '/'; }
   function samePage(a, b) { return cleanPath(a) === cleanPath(b); }
 
+  // lien vers la page courante, sans ancre : simple retour en haut
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
+    var u; try { u = new URL(a.getAttribute('href'), location.href); } catch (err) { return; }
+    if (u.origin === location.origin && samePage(u.pathname, location.pathname) && u.search === location.search && !u.hash) { e.preventDefault(); scrollTo(document.body, 0); }
+  });
   // départ vers une autre page
   document.addEventListener('click', function (e) {
     if (calm || !hasGsap || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -363,9 +371,7 @@
   function updateCount() {
     var n = totals().articles;
     document.querySelectorAll('[data-cart-count]').forEach(function (c) { c.textContent = n; });
-    document.querySelectorAll('[data-cart-open]').forEach(function (b) {
-      b.setAttribute('aria-label', 'Ouvrir le panier, ' + n + (n > 1 ? ' articles' : ' article'));
-    });
+    document.querySelectorAll('[data-cart-sr]').forEach(function (s) { s.textContent = n ? ' (' + n + (n > 1 ? ' articles)' : ' article)') : ''; });
   }
 
   var scrim = el('<div class="cart-scrim" hidden></div>');
@@ -414,7 +420,7 @@
         '<div><span>Livraison</span><span class="todo">à compléter</span></div>' +
         '<div class="tot"><span>Total</span><span>' + money(t.total) + '</span></div>' +
       '</div>' +
-      '<div class="pts"><span aria-hidden="true">★</span><span>Niveau ' + tiers.nom + ' : cette commande rapporterait <strong>' + t.points + ' points</strong> (' + tiers.parArticle + ' par article).</span></div>' +
+      '<div class="pts"><span aria-hidden="true">★</span><span>Niveau ' + tiers.nom + ' : cette commande rapporterait <strong>' + t.points + ' points</strong> (' + tiers.parArticle + ' par article).</span></div>' +
       '<fieldset class="paychoice"><legend>Paiement</legend>' +
         D.paiements.map(function (p, i) {
           return '<label><input type="radio" name="pay" value="' + esc(p) + '"' + (payChoice === p ? ' checked' : '') + ' id="pay-' + i + '"> ' + esc(p) + '</label>';
@@ -430,12 +436,12 @@
     cartBody.innerHTML = '<div class="cart-done">' +
       '<span class="badge-demo">Simulation</span>' +
       '<p class="big" tabindex="-1">Commande simulée</p>' +
-      '<p class="muted">Ceci est une maquette : aucune commande n’est transmise et aucun paiement n’est demandé.</p>' +
+      '<p class="muted">Ceci est une maquette : aucune commande n’est transmise et aucun paiement n’est demandé.</p>' +
       '<div class="sum">' + ls.map(function (l) {
         return '<div><span>' + l.q + ' × ' + esc(l.a.court) + '</span><span>' + money(l.a.prix * l.q) + '</span></div>';
       }).join('') +
       '<div class="tot"><span>Total taxes incluses</span><span>' + money(t.total) + '</span></div></div>' +
-      '<p>Paiement choisi : <strong>' + esc(payChoice) + '</strong></p>' +
+      '<p>Paiement choisi : <strong>' + esc(payChoice) + '</strong></p>' +
       '</div>';
     cartFoot.innerHTML = '<button class="btn btn--block" type="button" data-cart-reset>Vider le panier et fermer</button>';
   }
@@ -502,6 +508,7 @@
     if (cartView !== 'done') renderCart();
     scrim.hidden = false; drawer.hidden = false;
     setInert(true);
+    document.documentElement.classList.add('verrou');
     if (lenis) lenis.stop();
     if (hasGsap && !calm) {
       gsap.fromTo(drawer, { xPercent: 100 }, { xPercent: 0, duration: 0.55, ease: 'power4.out' });
@@ -513,6 +520,7 @@
   function closeCart() {
     if (drawer.hidden) return;
     setInert(false);
+    document.documentElement.classList.remove('verrou');
     var finish = function () {
       drawer.hidden = true; scrim.hidden = true;
       if (lenis) lenis.start();
@@ -593,7 +601,12 @@
 
   // touche Échap ferme le menu mobile
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && mobileNav && !mobileNav.hidden) { mobileNav.hidden = true; if (menuBtn) { menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.textContent = 'Menu'; } }
+    if (e.key === 'Escape' && mobileNav && !mobileNav.hidden) { mobileNav.hidden = true; if (menuBtn) { menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.textContent = 'Menu'; menuBtn.focus(); } }
+  });
+  // clic hors du menu mobile : il se referme
+  document.addEventListener('click', function (e) {
+    if (!mobileNav || mobileNav.hidden || e.target.closest('#mobile-nav, [data-menu]')) return;
+    mobileNav.hidden = true; if (menuBtn) { menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.textContent = 'Menu'; }
   });
 
   window.TVCQ.ui = {

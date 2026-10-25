@@ -34,7 +34,7 @@
         '</div>' +
       '</article>';
     }).join('') +
-    '<div class="device-end"><span class="label muted-dark">Pas sûr du modèle ?</span><p>Le bilan télé recommande un appareil selon votre téléviseur et vos priorités.</p>' +
+    '<div class="device-end"><span class="label muted-dark">Pas sûr du modèle ?</span><p>Le bilan télé recommande un appareil selon votre téléviseur et vos priorités.</p>' +
     '<a class="btn btn--light" href="bilan.html" data-magnetic>Faire mon bilan <span class="arrow">→</span></a></div>';
   }
 
@@ -91,7 +91,7 @@
     if (action.indexOf('ch:') === 0) {
       var n = parseInt(action.slice(3), 10);
       if (n >= 1 && n <= sections.length) goChannel(n);
-      else ui.toast('Chaîne ' + n + ' : aucune section, essayez 1 à ' + sections.length);
+      else ui.toast('Chaîne ' + n + ' : aucune section, essayez 1 à ' + sections.length);
     } else if (action === 'ch+' || action === 'ok') goChannel((current || 1) + 1);
     else if (action === 'ch-' || action === 'back') goChannel((current || 1) - 1);
     else if (action === 'home' || action === 'power') goChannel(1);
@@ -412,7 +412,8 @@
   trackChannels();
   ui.boot();
 
-  var hashTarget = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  var hashTarget = null;
+  try { hashTarget = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) { /* ancre invalide */ }
   function jumpToHash() {
     if (!hashTarget) return;
     if (ui.lenis) ui.lenis.resize(); // la page a grandi avec les sections épinglées
