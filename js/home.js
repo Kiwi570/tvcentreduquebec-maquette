@@ -173,6 +173,12 @@
     remoteReady.then(function (r) { remote = r; if (r) r.powerOn(); });
   }
 
+  var heroPhoto = document.querySelector('[data-hero-photo]');
+  if (heroPhoto && motion) {
+    gsap.fromTo(heroPhoto, { scale: 1.14 }, { scale: 1.04, duration: 2.6, ease: 'power2.out', delay: firstVisit ? 0.9 : 0.3 });
+    gsap.to(heroPhoto, { yPercent: 10, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  }
+
   /* ---------- CH 02 : la facture qui fond ---------- */
   var bill = document.querySelector('.bill');
   if (bill) {
@@ -186,8 +192,8 @@
       var tl = gsap.timeline({
         scrollTrigger: { trigger: '.bill-stage', start: 'top 72%', end: 'bottom 45%', scrub: 0.7 }
       });
-      tl.from('.envelope', { rotation: -22, x: -40, y: 30, duration: 1 }, 0)
-        .from(bill, { rotation: 8, y: 60, duration: 1 }, 0);
+      tl.from('.bill-photo', { rotation: -16, x: -50, y: 40, duration: 1 }, 0)
+        .from(bill, { rotation: 5, y: 60, duration: 1 }, 0);
       var cut = 0;
       rows.forEach(function (r, i) {
         if (r.dataset.keep) return;

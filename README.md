@@ -1,4 +1,4 @@
-# Tv-Centre du Québec — maquette v2
+# Tv-Centre du Québec — maquette v3
 
 Maquette de présentation, direction « Télécommande ». Version légale de l’offre : appareils 4K, configuration à distance et solutions officielles.
 
@@ -11,6 +11,10 @@ Site statique (HTML, CSS, JavaScript), sans étape de construction, prêt pour V
 - `boutique.html` : présentoir à croix directionnelle, filtres, comparateur, panier simulé
 - `appareil.html#identifiant` : fiche appareil (un gabarit pour les 5 appareils), position dans la gamme, plan coté quand les dimensions sont connues
 - `404.html` : page « Pas de signal » servie par Vercel pour les adresses inconnues
+
+## Images Grok
+
+Dans `img/grok/` : ouverture (ordinateur et téléphone) et enveloppe de la facture. Les autres emplacements gardent un visuel provisoire dessiné en code, marqué « Visuel provisoire », en attendant leurs images (voir le document de consignes Grok).
 
 ## Données
 

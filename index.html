@@ -18,6 +18,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="img/favicon-64.png" sizes="64x64" type="image/png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preload" as="image" imagesrcset="img/grok/accueil-ouverture-16x9-760.webp 760w, img/grok/accueil-ouverture-16x9-1168.webp 1168w" imagesizes="100vw" media="(min-width: 900px)">
+<link rel="preload" as="image" imagesrcset="img/grok/accueil-ouverture-9x16-520.webp 520w, img/grok/accueil-ouverture-9x16-784.webp 784w" imagesizes="100vw" media="(max-width: 899px)">
 <link rel="preload" href="fonts/geist.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="fonts/geist-mono.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="css/style.css">
@@ -62,8 +64,13 @@
 
   <!-- CH 01 · Ouverture -->
   <section class="hero ch dark" id="ouverture" data-channel="1" data-label="Ouverture" aria-labelledby="titre-ouverture">
-    <div class="scene" aria-hidden="true"><div class="tv-glow"><div class="tv-pic"></div><div class="tv-lines"></div><span class="tv-osd">CH 01</span></div><div class="floor"></div><div class="grain"></div></div>
-    <span class="ph-tag" style="right:max(16px, calc(var(--rail) + 16px));top:calc(var(--header-h) + 34px)">Visuel provisoire</span>
+    <div class="scene scene--photo" aria-hidden="true">
+      <picture>
+        <source media="(max-width: 899px)" srcset="img/grok/accueil-ouverture-9x16-520.webp 520w, img/grok/accueil-ouverture-9x16-784.webp 784w" sizes="100vw">
+        <img class="scene-photo" src="img/grok/accueil-ouverture-16x9-1168.webp" srcset="img/grok/accueil-ouverture-16x9-760.webp 760w, img/grok/accueil-ouverture-16x9-1168.webp 1168w" sizes="100vw" alt="" width="1168" height="657" fetchpriority="high" data-hero-photo>
+      </picture>
+      <div class="scene-shade"></div><div class="grain"></div>
+    </div>
     <div class="hero-content wrap with-rail">
       <div class="ch-tag" data-hero-in><span class="num">CH 01</span><span class="label">Centre-du-Québec · télé sans câble</span></div>
       <h1 id="titre-ouverture" data-split="intro"><span class="l1">Gardez vos émissions.</span> <span class="l2 accent">Allégez la facture.</span></h1>
@@ -91,8 +98,9 @@
           <p class="muted" style="font-size:.9rem">3 questions · environ une minute · aucun compte à créer</p>
         </div>
         <div class="bill-stage">
-          <div class="envelope" aria-hidden="true"></div>
-          <span class="ph-tag light" style="left:0;bottom:0">Visuel provisoire</span>
+          <figure class="bill-photo" aria-hidden="true">
+            <img src="img/grok/accueil-economies-enveloppe-4x5-784.webp" srcset="img/grok/accueil-economies-enveloppe-4x5-520.webp 520w, img/grok/accueil-economies-enveloppe-4x5-784.webp 784w" sizes="(min-width: 900px) 26vw, 60vw" alt="" width="784" height="980" loading="lazy">
+          </figure>
           <div class="bill" role="figure" aria-label="Facture d’exemple, montants fictifs">
             <div class="bill-head"><strong>Facture télé</strong><span class="badge-demo">Exemple</span></div>
             <div class="bill-row" data-amount="45"><span>Forfait télé de base</span><span>45,00 $</span><span class="strike" aria-hidden="true"></span></div>
