@@ -1142,7 +1142,7 @@ main { display: block; }
 .rc-lab { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; fill: var(--steel); }
 .rc-axis { stroke: var(--mist); stroke-width: 2; stroke-linecap: round; }
 .rc-tick { stroke: var(--mist); stroke-width: 1.5; }
-.rc-tickl { font-family: var(--mono); font-size: 11px; fill: var(--steel); }
+.rc-tickl { font-family: var(--mono); font-size: 12px; fill: var(--steel); }
 .rc-hit { fill: transparent; }
 .rc-mark { fill: #a6a8b1; stroke: var(--pearl-hi); stroke-width: 2; }
 .rc-dot { cursor: default; outline: none; }
@@ -1293,3 +1293,44 @@ html.verrou { overflow: hidden; }
 .map-card .badge-demo { color: var(--on-dark-muted); }
 .reco .muted { color: var(--steel); }
 .reco .todo { color: var(--signal-ink); }
+
+/* ---------- Corrections audit, étape 2 ---------- */
+/* téléphone et tablette : aucun texte sous 12 px */
+@media (max-width: 999px) {
+  :root { --t-label: max(12px, 0.72rem); }
+  .todo { font-size: max(12px, 0.78em); }
+  .menu-btn, .badge-demo, .bill-note, .ph-tag, .device-card .idx, .spec-list li span:first-child,
+  .gg-cell .lbl, .gg-cell .src, .gg-col .k, .gg-sweep-label, .field label, .paychoice legend,
+  .services .cat, .shop-card .tagline span, .shop-card .facts, .compare tbody th, .spec-table th,
+  .tier-front .flip-hint, .tier-back dt, .gauge-marks, .pick a, .brand-sub, .calm-toggle, .tv-screen .led-txt { font-size: max(12px, 0.7rem); }
+}
+/* cibles tactiles de 44 px */
+.brand { min-height: 44px; }
+.mobile-nav a { padding-block: 17px; }
+.crumbs a { min-height: 44px; display: inline-flex; align-items: center; }
+.range { height: 44px; }
+.compare thead th a { min-height: 44px; display: inline-flex; align-items: center; }
+
+/* barre d'actions du bas, sur téléphone : après le héros, masquée sur le formulaire, le pied et le menu */
+.barre-bas {
+  position: fixed; z-index: 45;
+  left: max(10px, env(safe-area-inset-left, 0px)); right: max(10px, env(safe-area-inset-right, 0px));
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px;
+  padding: 8px; border-radius: 14px;
+  background: var(--ink); box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.6);
+  transform: translateY(calc(100% + 20px)); opacity: 0; visibility: hidden;
+  transition: transform 0.35s var(--ease), opacity 0.35s var(--ease), visibility 0s linear 0.35s;
+}
+.barre-bas.is-on { transform: none; opacity: 1; visibility: visible; transition-delay: 0s; }
+.barre-bas .btn { min-height: 48px; padding: 4px 0.8em; font-size: 0.9rem; line-height: 1.15; text-align: center; }
+@media (min-width: 700px) { .barre-bas { display: none; } }
+.has-barre .site-footer { padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + 90px), calc(var(--barres-h, 0px) + 24px)); }
+
+/* mentions légales */
+.legal { display: grid; gap: 28px; max-width: 68ch; padding-block: clamp(40px, 6vw, 80px) clamp(56px, 8vw, 110px); }
+.legal section { display: grid; gap: 10px; }
+.legal h2 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); letter-spacing: -0.03em; }
+.legal p { color: var(--steel); }
+@media (pointer: coarse) { .site-footer a, footer a { min-height: 44px; display: inline-flex; align-items: center; padding-block: 0; } }
+.compare thead th a { min-width: 44px; }

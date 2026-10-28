@@ -223,7 +223,7 @@
       x: function () { return -dist(); }, ease: 'none',
       scrollTrigger: {
         trigger: devSec, start: 'top top', end: function () { return '+=' + Math.max(400, dist()); },
-        pin: true, scrub: 0.8, invalidateOnRefresh: true, anticipatePin: 1,
+        pin: true, scrub: 0.8, invalidateOnRefresh: true,
         onUpdate: function (self) { if (prog) gsap.set(prog, { scaleX: self.progress }); }
       }
     });
@@ -280,7 +280,7 @@
     var howTl = gsap.timeline({
       scrollTrigger: {
         trigger: pinOK ? '.ch-how' : how, start: pinOK ? 'top top' : 'top 70%', end: pinOK ? '+=140%' : 'bottom 40%',
-        pin: pinOK, scrub: 0.6, anticipatePin: 1,
+        pin: pinOK, scrub: 0.6,
         onUpdate: function (self) { setStep(self.progress); }
       }
     });

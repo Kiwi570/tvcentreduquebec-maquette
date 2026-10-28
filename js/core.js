@@ -94,6 +94,12 @@
       lbEl0.textContent = label;
       return;
     }
+    if (surZone) {
+      // formulaire ou pied de page à l'écran : le bandeau reste masqué
+      chEl0.textContent = ch;
+      lbEl0.textContent = label;
+      return;
+    }
     // comme sur un téléviseur : le bandeau apparaît au changement de chaîne puis s'efface
     clearTimeout(osdTimer);
     osd.classList.remove('is-off');
@@ -331,6 +337,55 @@
       location.reload();
     });
   });
+
+  /* ---------- Masquage sur le formulaire et le pied de page ---------- */
+  // le bandeau de chaîne et la barre du bas ne recouvrent jamais le formulaire ni le pied
+  var surZone = false;
+  var onZone = [];
+  if ('IntersectionObserver' in window) {
+    var zones = document.querySelectorAll('#contact, form, .site-footer');
+    var vues = new Set();
+    var zio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) vues.add(en.target); else vues.delete(en.target); });
+      surZone = vues.size > 0;
+      onZone.forEach(function (fn) { fn(); });
+    });
+    zones.forEach(function (z) { zio.observe(z); });
+  }
+  onZone.push(function () { if (surZone) osd.classList.add('is-off'); });
+
+  /* ---------- Barre d'actions du bas (téléphone) ---------- */
+  if (document.body.hasAttribute('data-barre')) {
+    var barre = el('<nav class="barre-bas" aria-label="Actions rapides"><a class="btn btn--signal" href="bilan.html">Faire mon bilan</a><a class="btn btn--light" href="index.html#contact">Être rappelé</a></nav>');
+    var hero = document.querySelector('.hero, .page-hero');
+    var main = document.querySelector('main');
+    if (main) main.appendChild(barre); else document.body.appendChild(barre);
+    var heroPasse = !hero;
+    var syncBarre = function () {
+      var menuOuvert = mobileNav && !mobileNav.hidden;
+      var on = heroPasse && !surZone && !menuOuvert && !root.classList.contains('verrou');
+      barre.classList.toggle('is-on', on);
+      barre.querySelectorAll('a').forEach(function (a) { if (on) a.removeAttribute('tabindex'); else a.setAttribute('tabindex', '-1'); });
+      barre.setAttribute('aria-hidden', String(!on));
+    };
+    var mesureBarre = function () {
+      var h = barre.offsetHeight ? barre.offsetHeight + 10 : 0;
+      root.style.setProperty('--barres-h', h + 'px');
+    };
+    document.body.classList.add('has-barre');
+    if (hero && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) { heroPasse = !en[0].isIntersecting; syncBarre(); }).observe(hero);
+    }
+    onZone.push(syncBarre);
+    if (window.MutationObserver) {
+      var mo = new MutationObserver(syncBarre);
+      mo.observe(root, { attributes: true, attributeFilter: ['class'] });
+      if (mobileNav) mo.observe(mobileNav, { attributes: true, attributeFilter: ['hidden'] });
+    }
+    if (window.ResizeObserver) new ResizeObserver(mesureBarre).observe(barre);
+    mesureBarre();
+    syncBarre();
+  }
 
   /* ---------- Panier ---------- */
   var CART_KEY = 'tvcq-panier';
